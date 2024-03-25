@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: AutoPartsStore
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/auto_parts_store
+    username: root
+    password: "demo"
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
