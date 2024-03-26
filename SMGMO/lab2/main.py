@@ -69,7 +69,7 @@ def main():
             type = "circle" для генерации кольцевой выборки
                  = "gauss" для генерации двух Гауссовых множеств
     """
-    train_set = generator.generate(num_points, noise, "gauss")
+    train_set = generator.generate(num_points, noise, "circle")
     draw_set(train_set)
 
     """ INFO: 

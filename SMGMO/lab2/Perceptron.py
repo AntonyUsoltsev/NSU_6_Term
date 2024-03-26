@@ -23,7 +23,7 @@ def prepare_data(train: np.ndarray, feature_size):
     elif feature_size == 5:  # Получим кривую
         train_data = np.hstack((np.ones(len(train_set)).reshape(-1, 1), train_set, train_set ** 2))
     else:
-        raise ValueError("Invalid weight vector dimension")
+        raise ValueError("Invalid feature size")
     return train_data, class_data
 
 
