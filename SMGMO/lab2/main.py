@@ -36,6 +36,24 @@ def class_split(data, coefs):
     return np.hstack((train_set, (train_data @ coefs > 0.0).astype(int).reshape(-1, 1)))
 
 
+def classification(train_set, epochs, ed_coef, K, delta, type):
+    start_time = time.time()
+    W = perceptron.classification(train_set, epochs, ed_coef, K, delta, type)
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"Execution time for {type}: {round(execution_time, 3)} seconds")
+
+    set_after_class = class_split(train_set, W)
+    # INFO: (i, j) - i-ый класс распознан как j
+    cm = confusion_matrix(train_set[:, 2], set_after_class[:, 2])
+    print(cm)
+
+    draw_set(set_after_class)
+    draw_separate_line(W)
+    plt.title(type)
+    plt.show()
+
+
 def main():
     num_points = 100
     noise = 0
@@ -51,20 +69,8 @@ def main():
     draw_set(train_set)
     plt.show()
 
-    start_time = time.time()
-    W = perceptron.classification(train_set, epochs, ed_coef, K, delta, "sigm")
-    end_time = time.time()
-    execution_time = end_time - start_time
-    print("Execution time:", execution_time, "seconds")
-
-    set_after_class = class_split(train_set, W)
-    # INFO: (i, j) - i-ый класс распознан как j
-    cm = confusion_matrix(train_set[:, 2], set_after_class[:, 2])
-    print(cm)
-
-    draw_set(set_after_class)
-    draw_separate_line(W)
-    plt.show()
+    classification(train_set, epochs, ed_coef, K, delta, "sigm")
+    classification(train_set, epochs, ed_coef, K, delta, "step")
 
 
 main()
