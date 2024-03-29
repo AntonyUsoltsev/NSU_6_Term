@@ -22,6 +22,9 @@ def prepare_data(train: np.ndarray, feature_size):
         train_data = np.hstack((np.ones(len(train_set)).reshape(-1, 1), train_set))
     elif feature_size == 5:  # Получим кривую
         train_data = np.hstack((np.ones(len(train_set)).reshape(-1, 1), train_set, train_set ** 2))
+    elif feature_size == 6:  # Получим кривую
+        train_data = np.hstack((np.ones(len(train_set)).reshape(-1, 1), train_set, train_set ** 2,
+                                (train_set[:, 0] * train_set[:, 1]).reshape(-1, 1)))
     else:
         raise ValueError("Invalid feature size")
     return train_data, class_data
