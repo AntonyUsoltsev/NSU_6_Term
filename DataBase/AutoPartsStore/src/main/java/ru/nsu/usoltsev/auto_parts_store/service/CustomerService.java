@@ -24,7 +24,7 @@ public class CustomerService {
         return CustomerMapper.INSTANCE.toDto(savedCustomer);
     }
 
-    public CustomerDto getCustomer(Long id) {
+    public CustomerDto getCustomerById(Long id) {
         return CustomerMapper.INSTANCE.toDto(customerRepository.findById(id).orElseThrow());
     }
 

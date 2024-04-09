@@ -8,17 +8,20 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class SupplierDto {
-
-    private Long supplierId;
+public class ItemsDto {
+    private Long itemId;
 
     private String name;
 
-    private String documents;
+    private String category;
 
-    private String type;
+    private Integer amount;
 
-    private Boolean garanty;
+    private Integer defectAmount;
+
+    private Integer price;
+
+    private Integer cellNumber;
 
     private List<Delivery> deliveries;
 }
