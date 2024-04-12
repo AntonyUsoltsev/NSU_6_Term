@@ -13,6 +13,9 @@ spring:
       ddl-auto: update
     database: POSTGRESQL
     show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
 #  sql:
 #    init:

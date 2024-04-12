@@ -2,11 +2,9 @@ package ru.nsu.usoltsev.auto_parts_store.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.nsu.usoltsev.auto_parts_store.model.dto.CustomerDto;
+import ru.nsu.usoltsev.auto_parts_store.exception.ResourceNotFoundException;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.ItemsDto;
-import ru.nsu.usoltsev.auto_parts_store.model.entity.Customer;
 import ru.nsu.usoltsev.auto_parts_store.model.entity.Items;
-import ru.nsu.usoltsev.auto_parts_store.model.mapper.CustomerMapper;
 import ru.nsu.usoltsev.auto_parts_store.model.mapper.ItemsMapper;
 import ru.nsu.usoltsev.auto_parts_store.repository.ItemsRepository;
 
@@ -23,8 +21,10 @@ public class ItemsService {
         Items savedItem = itemsRepository.saveAndFlush(customer);
         return ItemsMapper.INSTANCE.toDto(savedItem);
     }
+
     public ItemsDto getItemById(Long id) {
-        return ItemsMapper.INSTANCE.toDto(itemsRepository.findById(id).orElseThrow());
+        return ItemsMapper.INSTANCE.toDto(itemsRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Item is not found by id: " + id)));
     }
 
     public List<ItemsDto> getItems() {
@@ -33,4 +33,12 @@ public class ItemsService {
                 .map(ItemsMapper.INSTANCE::toDto)
                 .collect(Collectors.toList());
     }
+
+    public List<ItemsDto> getItemsByCategory(String category) {
+        return itemsRepository.findByCategory(category)
+                .stream()
+                .map(ItemsMapper.INSTANCE::toDto)
+                .collect(Collectors.toList());
+    }
+
 }

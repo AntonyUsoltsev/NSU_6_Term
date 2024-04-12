@@ -3,6 +3,7 @@ package ru.nsu.usoltsev.auto_parts_store.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.nsu.usoltsev.auto_parts_store.exception.ResourceNotFoundException;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.CustomerDto;
 import ru.nsu.usoltsev.auto_parts_store.model.entity.Customer;
 import ru.nsu.usoltsev.auto_parts_store.model.mapper.CustomerMapper;
@@ -25,7 +26,8 @@ public class CustomerService {
     }
 
     public CustomerDto getCustomerById(Long id) {
-        return CustomerMapper.INSTANCE.toDto(customerRepository.findById(id).orElseThrow());
+        return CustomerMapper.INSTANCE.toDto(customerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer is not found by id: " + id)));
     }
 
     public List<CustomerDto> getCustomers() {

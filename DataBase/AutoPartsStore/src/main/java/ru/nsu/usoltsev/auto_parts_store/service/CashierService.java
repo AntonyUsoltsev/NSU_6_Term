@@ -3,6 +3,7 @@ package ru.nsu.usoltsev.auto_parts_store.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.nsu.usoltsev.auto_parts_store.exception.ResourceNotFoundException;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.CashierDto;
 import ru.nsu.usoltsev.auto_parts_store.model.entity.Cashier;
 import ru.nsu.usoltsev.auto_parts_store.model.mapper.CashierMapper;
@@ -25,7 +26,8 @@ public class CashierService {
     }
 
     public CashierDto getCashierById(Long id) {
-        return CashierMapper.INSTANCE.toDto(cashierRepository.findById(id).orElseThrow());
+        return CashierMapper.INSTANCE.toDto(cashierRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Cashier is not found by id: " + id)));
     }
 
     public List<CashierDto> getCashiers() {

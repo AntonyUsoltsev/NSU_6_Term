@@ -13,20 +13,26 @@ import java.util.List;
 @RequestMapping("api/items")
 @AllArgsConstructor
 public class ItemsController {
-    private ItemsService customerService;
+    private ItemsService itemsRepository;
 
     @GetMapping("/{id}")
     public ResponseEntity<ItemsDto> getItem(@PathVariable String id) {
-        return ResponseEntity.ok(customerService.getItemById(Long.valueOf(id)));
+        return ResponseEntity.ok(itemsRepository.getItemById(Long.valueOf(id)));
     }
 
     @GetMapping()
     public ResponseEntity<List<ItemsDto>> getItem() {
-        return ResponseEntity.ok(customerService.getItems());
+        return ResponseEntity.ok(itemsRepository.getItems());
+    }
+
+    @GetMapping("/{category}")
+    public ResponseEntity<List<ItemsDto>> getItemsByCategory(@PathVariable String category) {
+        List<ItemsDto> items = itemsRepository.getItemsByCategory(category);
+        return new ResponseEntity<>(items, HttpStatus.OK);
     }
 
     @PostMapping()
     public ResponseEntity<ItemsDto> createCustomer(@RequestBody ItemsDto itemDto) {
-        return new ResponseEntity<>(customerService.saveItem(itemDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(itemsRepository.saveItem(itemDto), HttpStatus.CREATED);
     }
 }
