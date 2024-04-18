@@ -50,6 +50,9 @@ def classification(train_set, epochs, ed_coef, K, delta, type, feature_size):
     """
     cm = confusion_matrix(train_set[:, 2], set_after_class[:, 2])
     print(cm)
+    accuracy = ((cm[0][0] + cm[1][1]) /
+                (cm[0][0] + cm[0][1] + cm[1][0] + cm[1][1]))
+    print(f"Accuracy: {accuracy}")
     draw_set(set_after_class)
 
     draw_separate_curve(W, set_after_class)
@@ -57,7 +60,7 @@ def classification(train_set, epochs, ed_coef, K, delta, type, feature_size):
 
 
 def main():
-    num_points = 1000
+    num_points = 100
     noise = 0.0
     epochs = 100
     ed_coef = 0.5
@@ -71,8 +74,10 @@ def main():
         :param
             type = "circle" для генерации кольцевой выборки
                  = "gauss" для генерации двух Гауссовых множеств
+                 = "xor" для генерации двух Xor множеств
+                 = "spiral" для генерации двух спиральных множеств
     """
-    train_set = generator.generate(num_points, noise, "xor")
+    train_set = generator.generate(num_points, noise, "gauss")
     draw_set(train_set)
 
     """ INFO: 
@@ -86,7 +91,7 @@ def main():
     """
     train_sets = np.array_split(train_set, perceptron_amount)
     for ts in train_sets:
-        classification(ts, epochs, ed_coef, K, delta, "sigm", 6)
+        classification(ts, epochs, ed_coef, K, delta, "sigm", 3)
 
     plt.show()
 
