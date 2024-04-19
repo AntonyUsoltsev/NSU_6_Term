@@ -3,15 +3,15 @@ import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.metrics import accuracy_score
 import Generator as generator
 from Perceptron import MLP
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import KFold
 
 
 def plot_classification_result(x_data, predictions):
-    class_0_x = x_data[predictions == 0]
-    class_1_x = x_data[predictions == 1]
+    class_0_x = x_data[predictions.squeeze() == 0]
+    class_1_x = x_data[predictions.squeeze() == 1]
     plt.figure(figsize=(8, 6))
     plt.scatter(class_0_x[:, 0], class_0_x[:, 1], color='red', label='Class 0')
     plt.scatter(class_1_x[:, 0], class_1_x[:, 1], color='blue', label='Class 1')
@@ -43,7 +43,7 @@ def train_model(model, x_train, y_train, epochs, lr):
 
         outputs = model(x_train)  # forward pass
 
-        # print(f"train: {y_train.shape}, pred: {outputs.shape}")
+        # print(f"pred: {outputs.shape}, train: {y_train.shape}")
         loss = error_func(outputs, y_train)  # вычисление ошибки
 
         loss.backward()  # back propagation - вычисление градиентов
@@ -60,12 +60,15 @@ def train_model(model, x_train, y_train, epochs, lr):
         if (epoch + 1) % 250 == 0:
             accuracy = accuracy_score(y_train.numpy(), np.argmax(model.forward(x_train).detach().numpy(), axis=1))
             print(f'Epoch [{epoch + 1}/{epochs}], Loss: {loss}, accuracy {accuracy}, test error: {test_error}')
+
     return outputs
+
 
 def cross_validation(model, x_data, y_data, k=5, epochs=1000, lr=0.3):
     kf = KFold(n_splits=k)
     accuracies = []
     max_accuracy = 0
+    best_train = None
     best_predictions = None
 
     for train_index, test_index in kf.split(x_data):
@@ -78,7 +81,7 @@ def cross_validation(model, x_data, y_data, k=5, epochs=1000, lr=0.3):
         y_test_tensor = torch.tensor(y_test, dtype=torch.long)
 
         model_predictions = train_model(model, x_train_tensor, y_train_tensor, epochs, lr)
-
+        print("Cross validation iteration end\n")
         with torch.no_grad():
             outputs = model(x_test_tensor)
             _, predictions = torch.max(outputs, 1)
@@ -87,43 +90,40 @@ def cross_validation(model, x_data, y_data, k=5, epochs=1000, lr=0.3):
 
             if accuracy > max_accuracy:
                 max_accuracy = accuracy
-                best_predictions = predictions.numpy()
+                best_train = x_train_tensor
+                _, best_predictions = torch.max(model_predictions, 1)
 
     avg_accuracy = np.mean(accuracies)
     print(f'Average accuracy across {k}-fold cross-validation: {avg_accuracy}')
-    print(f'Max accuracy across {k}-fold cross-validation: {max_accuracy}')
+    print(f'Max accuracy across {k}-fold cross-validation: {max_accuracy}\n')
 
-    return best_predictions
+    return best_train, best_predictions
 
 
 def main():
-    num_points = 100
+    num_points = 200
     noise = 0.0
-    epochs = 1000
-    learning_rate = 0.3
+    epochs = 2000
+    learning_rate = 0.03
+
     # Задание данных для обучения
-    train_set = generator.generate(num_points, noise, "circle")
+    train_set = generator.generate(num_points, noise, "xor")
     draw_set(train_set)
-    # Преобразование данных в тензоры PyTorch
     x_train = train_set[:, :2]
     y_train = train_set[:, 2]
-    # print(x_train)
-
-    x_train_tensor = torch.tensor(x_train, dtype=torch.float32)
-    y_train_tensor = torch.tensor(y_train, dtype=torch.long)
 
     # Задание параметров модели и обучение
     input_size = x_train.shape[1]
     output_size = len(np.unique(y_train))  # Количество классов
-    print(f"input size = {input_size}, output size = {output_size}")
-    hidden_sizes = [5, 3, 2]  # Пример количества нейронов в скрытых слоях
+    print(f"input size = {input_size}")
+    hidden_sizes = [5, 3, 3]  # Количество нейронов в скрытых слоях
     activation_functions = [nn.Sigmoid, nn.Tanh, nn.ReLU]  # Список функций активации
 
     for activation in activation_functions:
         print(f"Training with activation function: {activation.__name__}")
         model = MLP(input_size, hidden_sizes, output_size, activation)
-        best_predictions = cross_validation(model, x_train, y_train, 5, epochs, learning_rate)
-        plot_classification_result(x_train, best_predictions)
+        best_train, best_predictions = cross_validation(model, x_train, y_train, 5, epochs, learning_rate)
+        plot_classification_result(best_train, best_predictions)
 
 
 main()
