@@ -9,15 +9,15 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import KFold
 
 
-def plot_classification_result(x_data, predictions):
+def plot_classification_result(x_data, predictions, activation):
     class_0_x = x_data[predictions.squeeze() == 0]
     class_1_x = x_data[predictions.squeeze() == 1]
-    plt.figure(figsize=(8, 6))
+    plt.figure(figsize=(8, 8))
     plt.scatter(class_0_x[:, 0], class_0_x[:, 1], color='red', label='Class 0')
     plt.scatter(class_1_x[:, 0], class_1_x[:, 1], color='blue', label='Class 1')
     plt.xlabel('Feature 1')
     plt.ylabel('Feature 2')
-    plt.title('Classification Result')
+    plt.title(f"{activation.__name__}")
     plt.legend()
     plt.show()
 
@@ -33,11 +33,11 @@ def draw_set(set_to_draw):
 
 # Функция для обучения модели
 def train_model(model, x_train, y_train, epochs, lr):
-    error_func = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=lr)
+    error_func = nn.CrossEntropyLoss()
     outputs = []
     for epoch in range(epochs):
-        model.train()
+        model.train()  # установка модели в режим обучения
 
         optimizer.zero_grad()  # обнуление весов
 
@@ -50,21 +50,16 @@ def train_model(model, x_train, y_train, epochs, lr):
 
         optimizer.step()  # обновление весов сети
 
-        model.eval()
-        with torch.inference_mode():
-            XXT = x_train.clone().detach()
-            test_pred = model(XXT).squeeze()
-            YYT = y_train.clone().detach()
-            test_error = error_func(test_pred, YYT)
+        model.eval()  # установка модели в режим оценивания
 
         if (epoch + 1) % 250 == 0:
             accuracy = accuracy_score(y_train.numpy(), np.argmax(model.forward(x_train).detach().numpy(), axis=1))
-            print(f'Epoch [{epoch + 1}/{epochs}], Loss: {loss}, accuracy {accuracy}, test error: {test_error}')
+            print(f'Epoch [{epoch + 1}/{epochs}], Loss: {loss}, accuracy {accuracy}')
 
     return outputs
 
 
-def cross_validation(model, x_data, y_data, k=5, epochs=1000, lr=0.3):
+def cross_validation(input_size, hidden_sizes, output_size, activation,x_data, y_data, k=5, epochs=1000, lr=0.3):
     kf = KFold(n_splits=k)
     accuracies = []
     max_accuracy = 0
@@ -72,6 +67,8 @@ def cross_validation(model, x_data, y_data, k=5, epochs=1000, lr=0.3):
     best_predictions = None
 
     for train_index, test_index in kf.split(x_data):
+        model = MLP(input_size, hidden_sizes, output_size, activation)
+
         x_train, x_test = x_data[train_index], x_data[test_index]
         y_train, y_test = y_data[train_index], y_data[test_index]
 
@@ -101,13 +98,14 @@ def cross_validation(model, x_data, y_data, k=5, epochs=1000, lr=0.3):
 
 
 def main():
-    num_points = 200
+    num_points = 400
     noise = 0.0
-    epochs = 2000
-    learning_rate = 0.03
+    epochs = 1000
+    learning_rate = 0.01
+    cross_validation_count = 5
 
     # Задание данных для обучения
-    train_set = generator.generate(num_points, noise, "xor")
+    train_set = generator.generate(num_points, noise, "circle")
     draw_set(train_set)
     x_train = train_set[:, :2]
     y_train = train_set[:, 2]
@@ -116,14 +114,15 @@ def main():
     input_size = x_train.shape[1]
     output_size = len(np.unique(y_train))  # Количество классов
     print(f"input size = {input_size}")
-    hidden_sizes = [5, 3, 3]  # Количество нейронов в скрытых слоях
+    hidden_sizes = [5,3]  # Количество нейронов в скрытых слоях
     activation_functions = [nn.Sigmoid, nn.Tanh, nn.ReLU]  # Список функций активации
 
     for activation in activation_functions:
         print(f"Training with activation function: {activation.__name__}")
-        model = MLP(input_size, hidden_sizes, output_size, activation)
-        best_train, best_predictions = cross_validation(model, x_train, y_train, 5, epochs, learning_rate)
-        plot_classification_result(best_train, best_predictions)
+        best_train, best_predictions = cross_validation(input_size, hidden_sizes, output_size,
+                                                        activation, x_train, y_train,
+                                                        cross_validation_count, epochs, learning_rate)
+        plot_classification_result(best_train, best_predictions, activation)
 
 
 main()

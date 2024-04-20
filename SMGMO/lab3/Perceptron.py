@@ -11,7 +11,6 @@ class MLP(nn.Module):
             layers.append(nn.Linear(hidden_sizes[i], hidden_sizes[i + 1]))
             layers.append(activation())
         layers.append(nn.Linear(hidden_sizes[-1] if len(hidden_sizes) != 0 else input_size, output_size))
-        # layers.append(nn.Sigmoid())
 
         self.stack = nn.Sequential(*layers)
 
