@@ -1,8 +1,10 @@
 package ru.nsu.usoltsev.auto_parts_store.service;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import ru.nsu.usoltsev.auto_parts_store.exception.ResourceNotFoundException;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.CustomerDto;
 import ru.nsu.usoltsev.auto_parts_store.model.entity.Customer;
@@ -14,12 +16,13 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@Validated
 public class CustomerService {
 
     @Autowired
     private CustomerRepository customerRepository;
 
-    public CustomerDto saveCustomer(CustomerDto customerDto) {
+    public CustomerDto saveCustomer(@Valid CustomerDto customerDto) {
         Customer customer = CustomerMapper.INSTANCE.fromDto(customerDto);
         Customer savedCustomer = customerRepository.saveAndFlush(customer);
         return CustomerMapper.INSTANCE.toDto(savedCustomer);

@@ -2,6 +2,7 @@ package ru.nsu.usoltsev.auto_parts_store.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.query.Order;
 
 import java.util.List;
 
@@ -45,4 +46,12 @@ public class Items {
             inverseJoinColumns = @JoinColumn(name = "delivery_id")
     )
     private List<Delivery> deliveries;
+
+    @ManyToMany
+    @JoinTable(
+            name = "order_list",
+            joinColumns = @JoinColumn(name = "item_id"),
+            inverseJoinColumns = @JoinColumn(name = "order_id")
+    )
+    private List<Orders> orders;
 }

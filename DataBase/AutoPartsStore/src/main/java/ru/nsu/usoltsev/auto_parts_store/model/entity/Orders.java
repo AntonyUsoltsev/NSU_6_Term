@@ -31,6 +31,9 @@ public class Orders {
     @Column(name = "full_price", nullable = false)
     private Integer fullPrice;
 
+    @OneToOne(mappedBy = "orders")
+    private Transaction transaction;
+
     @ManyToMany
     @JoinTable(
             name = "order_list",

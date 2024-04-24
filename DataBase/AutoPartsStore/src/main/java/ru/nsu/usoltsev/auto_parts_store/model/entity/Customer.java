@@ -30,6 +30,6 @@ public class Customer {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @OneToMany(mappedBy = "customer") // Указываем связь один ко многим с сущностью Order
+    @OneToMany(mappedBy = "customer",  cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}) // Указываем связь один ко многим с сущностью Orders
     private List<Orders> orders;
 }

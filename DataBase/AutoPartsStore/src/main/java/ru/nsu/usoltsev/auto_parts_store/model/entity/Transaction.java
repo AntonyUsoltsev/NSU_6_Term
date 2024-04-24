@@ -20,7 +20,7 @@ public class Transaction {
     @Column(name = "transaction_id", nullable = false)
     private Long transactionId;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "order_id", nullable = false)
     private Orders orders;
 

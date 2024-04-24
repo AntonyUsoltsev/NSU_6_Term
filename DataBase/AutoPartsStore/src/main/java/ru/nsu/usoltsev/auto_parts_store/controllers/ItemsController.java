@@ -20,15 +20,25 @@ public class ItemsController {
         return ResponseEntity.ok(itemsRepository.getItemById(Long.valueOf(id)));
     }
 
-    @GetMapping()
-    public ResponseEntity<List<ItemsDto>> getItem() {
+    @GetMapping("/all")
+    public ResponseEntity<List<ItemsDto>> getItems() {
         return ResponseEntity.ok(itemsRepository.getItems());
     }
+//
+//    @GetMapping("/{id}")
+//    public ResponseEntity<ItemsDto> getItemById(@PathVariable("id") Long id) {
+//        ItemsDto item = itemsRepository.getItemById(id);
+//        if (item != null) {
+//            return ResponseEntity.ok(item);
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
-    @GetMapping("/{category}")
-    public ResponseEntity<List<ItemsDto>> getItemsByCategory(@PathVariable String category) {
+    @GetMapping()
+    public ResponseEntity<List<ItemsDto>> getItemsByCategory(@RequestParam("category") String category) {
         List<ItemsDto> items = itemsRepository.getItemsByCategory(category);
-        return new ResponseEntity<>(items, HttpStatus.OK);
+        return ResponseEntity.ok(items);
     }
 
     @PostMapping()

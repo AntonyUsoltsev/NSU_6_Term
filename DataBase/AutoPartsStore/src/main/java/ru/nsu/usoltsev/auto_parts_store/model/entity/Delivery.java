@@ -28,6 +28,11 @@ public class Delivery {
     @Column(name = "delivery_date", nullable = false)
     private Timestamp deliveryDate;
 
-    @ManyToMany(mappedBy = "deliveries")
+    @ManyToMany
+    @JoinTable(
+            name = "delivery_list",
+            joinColumns = @JoinColumn(name = "delivery_id"),
+            inverseJoinColumns = @JoinColumn(name = "item_id")
+    )
     private List<Items> items;
 }
