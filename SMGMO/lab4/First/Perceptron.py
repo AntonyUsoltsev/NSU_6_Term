@@ -1,6 +1,7 @@
 import numpy as np
 import math
 
+
 class Perceptron:
     def __init__(self, feature_size, num_classes):
         self.feature_size = feature_size
