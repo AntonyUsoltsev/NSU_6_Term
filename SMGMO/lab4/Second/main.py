@@ -38,9 +38,10 @@ def train_model(model, x_train, y_train, epochs, lr):
         model.train()  # set model to training mode
         optimizer.zero_grad()  # zero the gradients
         outputs = model(x_train)  # forward pass
-        loss = error_func(outputs, y_train)  # calculate the loss
+        loss = error_func(outputs.squeeze(), y_train)  # calculate the loss
         loss.backward()  # backward pass
         optimizer.step()  # update weights
+        model.eval()
         if (epoch + 1) % 500 == 0:
             print(f'Epoch [{epoch + 1}/{epochs}], Loss: {loss.item()}')
     return model  # return the trained model
@@ -56,52 +57,38 @@ def cross_validation(input_size, hidden_sizes, output_size, activation, x_data, 
     for train_index, test_index in kf.split(x_data):
         x_train, x_test = x_data[train_index], x_data[test_index]
         y_train, y_test = y_data[train_index], y_data[test_index]
-
-        x_train_tensor = torch.tensor(x_train, dtype=torch.float32).unsqueeze(1)
+        x_train_tensor = torch.tensor(x_train, dtype=torch.float32)
+        x_train_tensor = torch.unsqueeze(x_train_tensor, 1)
         y_train_tensor = torch.tensor(y_train, dtype=torch.float32)
-        x_test_tensor = torch.tensor(x_test, dtype=torch.float32)
-        y_test_tensor = torch.tensor(y_test, dtype=torch.float32)
 
         model = MLP(input_size, hidden_sizes, output_size, activation)
-        model_predictions = train_model(model, x_train_tensor, y_train_tensor, epochs, lr)
-        draw_func(x_train, model_predictions.detach().numpy(), x_train, y_train)
+        trained_model = train_model(model, x_train_tensor, y_train_tensor, epochs, lr)
+
+        with torch.no_grad():
+            model_predictions = trained_model(x_train_tensor)
+            draw_func(x_train, model_predictions.numpy(), x_train, y_train)
 
         print("Cross validation iteration end\n")
-
-    #     with torch.no_grad():
-    #         outputs = model(x_test_tensor)
-    #         _, predictions = torch.max(outputs, 1)
-    #         accuracy = accuracy_score(y_test_tensor.numpy(), predictions.numpy())
-    #         accuracies.append(accuracy)
-    #
-    #         if accuracy > max_accuracy:
-    #             max_accuracy = accuracy
-    #             best_train = x_train_tensor
-    #             _, best_predictions = torch.max(model_predictions, 1)
-    #
-    # avg_accuracy = np.mean(accuracies)
-    # print(f'Average accuracy across {k}-fold cross-validation: {avg_accuracy}')
-    # print(f'Max accuracy across {k}-fold cross-validation: {max_accuracy}\n')
 
     return best_train, best_predictions
 
 
 def main():
-    num_points = 400
+    num_points = 200
     noise = 0.0
     epochs = 2000
-    learning_rate = 0.003
+    learning_rate = 0.03
     cross_validation_count = 5
 
     # Задание данных для обучения
-    x_train, y_train = generator.generate(3, -2, 3, -2, num_points, "poly")
-    # draw_func(x_train, y_train)
+    x_train, y_train = generator.generate(-4, 2, 7, -2, num_points, noise, "poly")
+
     # Задание параметров модели и обучение
     input_size = 1
     output_size = 1
     print(f"input size = {input_size}")
 
-    hidden_sizes = [5, 2]  # Количество нейронов в скрытых слоях
+    hidden_sizes = [8]  # Количество нейронов в скрытых слоях
 
     activation_functions = [nn.Sigmoid, nn.Tanh, nn.ReLU]  # Список функций активации
 
@@ -110,7 +97,6 @@ def main():
         best_train, best_predictions = cross_validation(input_size, hidden_sizes, output_size,
                                                         activation, x_train, y_train,
                                                         cross_validation_count, epochs, learning_rate)
-        # plot_classification_result(best_train, best_predictions, activation)
 
 
 main()

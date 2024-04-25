@@ -15,5 +15,4 @@ class MLP(nn.Module):
         self.stack = nn.Sequential(*layers)
 
     def forward(self, x):
-        x = self.stack(x)
-        return x
+        return self.stack(x)
