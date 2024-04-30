@@ -2,9 +2,6 @@ package ru.nsu.usoltsev.auto_parts_store.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import ru.nsu.usoltsev.auto_parts_store.model.entity.Delivery;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -22,6 +19,4 @@ public class ItemsDto {
     private Integer price;
 
     private Integer cellNumber;
-
-    private List<Delivery> deliveries;
 }

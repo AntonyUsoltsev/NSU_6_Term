@@ -23,5 +23,4 @@ public class SupplierDto {
 
     private Boolean garanty;
 
-    private List<Delivery> deliveries;
 }

@@ -22,5 +22,4 @@ public class CashierDto {
     @Pattern(regexp = "[a-zA-Zа-яА-Я]+", message = "Second name can contain only letters")
     private String secondName;
 
-    private List<Transaction> transactions;
 }

@@ -19,6 +19,4 @@ public class OrdersDto {
     private Timestamp orderDate;
 
     private Integer fullPrice;
-
-    private List<Items> items;
 }

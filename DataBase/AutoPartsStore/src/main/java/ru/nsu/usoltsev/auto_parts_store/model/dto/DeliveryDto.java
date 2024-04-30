@@ -17,6 +17,4 @@ public class DeliveryDto {
     private Supplier supplier;
 
     private Timestamp deliveryDate;
-
-    private List<Items> items;
 }

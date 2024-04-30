@@ -25,7 +25,7 @@ public class Cashier {
 
     @Column(name = "second_name", nullable = false)
     private String secondName;
-
-    @OneToMany(mappedBy = "cashier",  cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private List<Transaction> transactions;
+//
+//    @OneToMany(mappedBy = "cashier",  cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+//    private List<Transaction> transactions;
 }
