@@ -20,13 +20,11 @@ public class Transaction {
     @Column(name = "transaction_id", nullable = false)
     private Long transactionId;
 
-    @OneToOne
-    @JoinColumn(name = "order_id", nullable = false)
-    private Orders orders;
+    @Column(name = "order_id", nullable = false)
+    private Long orderId;
 
-    @ManyToOne
-    @JoinColumn(name = "cashier_id", nullable = false)
-    private Cashier cashier;
+    @Column(name = "cashier_id", nullable = false)
+    private Long cashierId;
 
     @Column(name = "transaction_type", nullable = false)
     private String transactionType;

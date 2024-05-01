@@ -3,8 +3,6 @@ package ru.nsu.usoltsev.auto_parts_store.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,7 +27,4 @@ public class Customer {
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-
-    @OneToMany(mappedBy = "customer",  cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}) // Указываем связь один ко многим с сущностью Orders
-    private List<Orders> orders;
 }

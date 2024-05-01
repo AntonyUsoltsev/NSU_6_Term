@@ -21,18 +21,9 @@ public class Delivery {
     @Column(name = "delivery_id", nullable = false)
     private Long deliveryId;
 
-    @ManyToOne
-    @JoinColumn(name = "supplier_id", nullable = false)
-    private Supplier supplier;
+    @Column(name = "supplier_id", nullable = false)
+    private Long supplierId;
 
     @Column(name = "delivery_date", nullable = false)
     private Timestamp deliveryDate;
-
-    @ManyToMany
-    @JoinTable(
-            name = "delivery_list",
-            joinColumns = @JoinColumn(name = "delivery_id"),
-            inverseJoinColumns = @JoinColumn(name = "item_id")
-    )
-    private List<Items> items;
 }

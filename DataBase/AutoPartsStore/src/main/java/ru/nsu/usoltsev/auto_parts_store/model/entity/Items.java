@@ -39,19 +39,4 @@ public class Items {
     @Column(name = "cell_number", nullable = false)
     private Integer cellNumber;
 
-    @ManyToMany
-    @JoinTable(
-            name = "delivery_list",
-            joinColumns = @JoinColumn(name = "item_id"),
-            inverseJoinColumns = @JoinColumn(name = "delivery_id")
-    )
-    private List<Delivery> deliveries;
-
-    @ManyToMany
-    @JoinTable(
-            name = "order_list",
-            joinColumns = @JoinColumn(name = "item_id"),
-            inverseJoinColumns = @JoinColumn(name = "order_id")
-    )
-    private List<Orders> orders;
 }

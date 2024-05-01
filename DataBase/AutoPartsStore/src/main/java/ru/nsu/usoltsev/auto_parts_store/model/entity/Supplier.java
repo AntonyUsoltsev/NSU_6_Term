@@ -32,6 +32,4 @@ public class Supplier {
     @Column(name = "garanty", nullable = false)
     private Boolean garanty;
 
-    @OneToMany(mappedBy = "supplier", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH} )
-    private List<Delivery> deliveries;
 }

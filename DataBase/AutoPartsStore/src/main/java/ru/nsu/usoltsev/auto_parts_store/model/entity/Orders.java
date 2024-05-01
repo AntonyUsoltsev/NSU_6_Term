@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 @Getter
 @Setter
@@ -21,24 +20,12 @@ public class Orders {
     @Column(name = "order_id", nullable = false)
     private Long orderId;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
+    @Column(name = "customer_id", nullable = false)
+    private Long customerId;
 
     @Column(name = "order_date", nullable = false)
     private Timestamp orderDate;
 
     @Column(name = "full_price", nullable = false)
     private Integer fullPrice;
-
-    @OneToOne(mappedBy = "orders")
-    private Transaction transaction;
-
-    @ManyToMany
-    @JoinTable(
-            name = "order_list",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "item_id")
-    )
-    private List<Items> items;
 }

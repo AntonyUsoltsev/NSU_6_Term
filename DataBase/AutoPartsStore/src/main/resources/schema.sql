@@ -22,7 +22,9 @@ create table delivery (
 
 create table delivery_list (
     item_id bigint not null,
-    delivery_id bigint not null
+    delivery_id bigint not null,
+    amount bigint not null,
+    primary key (item_id, delivery_id)
 );
 
 create table items (
@@ -38,7 +40,9 @@ create table items (
 
 create table order_list (
     order_id bigint not null,
-    item_id bigint not null
+    item_id bigint not null,
+    amount bigint not null,
+    primary key (order_id, item_id)
 );
 
 create table orders (
@@ -63,34 +67,34 @@ create table transaction (
     transaction_date timestamp(6) not null,
     transaction_type varchar(255) not null,
     cashier_id bigint not null,
-    order_id bigint not null,
+    order_id bigint not null unique,
     primary key (transaction_id)
 );
 
 
 alter table if exists customer 
-       add constraint unique (email);
+       add constraint email_unique unique (email);
        
 alter table if exists delivery 
-       add constraint foreign key (supplier_id) references supplier;
+       add constraint fk_sp_id foreign key (supplier_id) references supplier;
 
 alter table if exists delivery_list 
-       add constraint foreign key (delivery_id) references delivery;
+       add constraint fk_del_id foreign key (delivery_id) references delivery;
        
 alter table if exists delivery_list 
-       add constraint foreign key (item_id) references items;
+       add constraint fk_item_id foreign key (item_id) references items;
 
 alter table if exists order_list 
-       add constraint  foreign key (item_id) references items;
+       add constraint fk_item2_id foreign key (item_id) references items;
  
 alter table if exists order_list 
-       add constraint foreign key (order_id) references orders;
+       add constraint fk_ord_id foreign key (order_id) references orders;
        
 alter table if exists orders 
-       add constraint foreign key (customer_id) references customer;
+       add constraint fk_cus_id foreign key (customer_id) references customer;
 
 alter table if exists transaction
-       add constraint foreign key (cashier_id) references cashier;
+       add constraint fk_cash_id foreign key (cashier_id) references cashier;
        
 alter table if exists transaction
-       add constraint foreign key (order_id) references orders;
+       add constraint fk_ord2_id foreign key (order_id) references orders;
