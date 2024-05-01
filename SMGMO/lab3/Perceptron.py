@@ -16,5 +16,4 @@ class MLP(nn.Module):
 
     def forward(self, x):
         x = self.stack(x)
-
         return x

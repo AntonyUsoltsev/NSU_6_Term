@@ -43,7 +43,6 @@ def train_model(model, x_train, y_train, epochs, lr):
 
         outputs = model(x_train)  # forward pass
 
-        # print(f"pred: {outputs.shape}, train: {y_train.shape}")
         loss = error_func(outputs, y_train)  # вычисление ошибки
 
         loss.backward()  # back propagation - вычисление градиентов
@@ -59,7 +58,7 @@ def train_model(model, x_train, y_train, epochs, lr):
     return outputs
 
 
-def cross_validation(input_size, hidden_sizes, output_size, activation,x_data, y_data, k=5, epochs=1000, lr=0.3):
+def cross_validation(input_size, hidden_sizes, output_size, activation, x_data, y_data, k=5, epochs=1000, lr=0.3):
     kf = KFold(n_splits=k)
     accuracies = []
     max_accuracy = 0
@@ -67,7 +66,6 @@ def cross_validation(input_size, hidden_sizes, output_size, activation,x_data, y
     best_predictions = None
 
     for train_index, test_index in kf.split(x_data):
-        model = MLP(input_size, hidden_sizes, output_size, activation)
 
         x_train, x_test = x_data[train_index], x_data[test_index]
         y_train, y_test = y_data[train_index], y_data[test_index]
@@ -77,8 +75,10 @@ def cross_validation(input_size, hidden_sizes, output_size, activation,x_data, y
         x_test_tensor = torch.tensor(x_test, dtype=torch.float32)
         y_test_tensor = torch.tensor(y_test, dtype=torch.long)
 
+        model = MLP(input_size, hidden_sizes, output_size, activation)
         model_predictions = train_model(model, x_train_tensor, y_train_tensor, epochs, lr)
         print("Cross validation iteration end\n")
+
         with torch.no_grad():
             outputs = model(x_test_tensor)
             _, predictions = torch.max(outputs, 1)
@@ -100,8 +100,8 @@ def cross_validation(input_size, hidden_sizes, output_size, activation,x_data, y
 def main():
     num_points = 400
     noise = 0.0
-    epochs = 1000
-    learning_rate = 0.01
+    epochs = 2000
+    learning_rate = 0.003
     cross_validation_count = 5
 
     # Задание данных для обучения
@@ -114,7 +114,13 @@ def main():
     input_size = x_train.shape[1]
     output_size = len(np.unique(y_train))  # Количество классов
     print(f"input size = {input_size}")
-    hidden_sizes = [5,3]  # Количество нейронов в скрытых слоях
+
+    hidden_sizes = [5, 8, 8]  # Количество нейронов в скрытых слоях
+    # для xor         [5, 8, 8] + любая ф.а. + 1000 epochs
+    # для Гауссовской [5, 3] + любая ф.а. + 250 epochs
+    # для круговой    [5, 3] + любая ф.а. + 750 epochs
+    # для спиральной  [8, 8, 8, 8, 8] + tanh или relu + 1000 epochs
+
     activation_functions = [nn.Sigmoid, nn.Tanh, nn.ReLU]  # Список функций активации
 
     for activation in activation_functions:

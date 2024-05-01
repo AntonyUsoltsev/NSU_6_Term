@@ -66,11 +66,11 @@ def cross_validation(input_size, hidden_sizes, output_size, activation, x_data, 
                 best_train = np.arange(-1, 1, 0.01)
                 contin_outputs = model(torch.tensor(np.arange(-1, 1, 0.01), dtype=torch.float32).unsqueeze(1))
                 best_predictions = contin_outputs.numpy()
-            draw_regression_result(x_train,
-                                   y_train,
-                                   np.arange(-1, 1, 0.01),
-                                   model(
-                                       torch.tensor(np.arange(-1, 1, 0.01), dtype=torch.float32).unsqueeze(1)).numpy())
+            # draw_regression_result(x_train,
+            #                        y_train,
+            #                        np.arange(-1, 1, 0.01),
+            #                        model(
+            #                            torch.tensor(np.arange(-1, 1, 0.01), dtype=torch.float32).unsqueeze(1)).numpy())
 
         print("Cross validation iteration end\n")
 
@@ -82,8 +82,8 @@ def cross_validation(input_size, hidden_sizes, output_size, activation, x_data, 
 
 
 def main():
-    num_points = 10
-    noise = 0.2
+    num_points = 100
+    noise = 0.0
     epochs = 2000
     learning_rate = 0.003
     cross_validation_count = 5
@@ -92,7 +92,8 @@ def main():
     # Задание параметров модели и обучение
     input_size = 1
     output_size = 1
-    hidden_sizes = [10, 15, 5, 4]  # Количество нейронов в скрытых слоях
+    hidden_sizes = [7, 8, 5]  # Количество нейронов в скрытых слоях
+    # hidden_sizes = [10, 15, 5, 4]  # Количество нейронов в скрытых слоях
     activation_functions = [nn.Sigmoid, nn.Tanh, nn.ReLU]  # Список функций активации
 
     for activation in activation_functions:

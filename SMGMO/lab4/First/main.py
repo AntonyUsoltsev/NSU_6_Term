@@ -1,8 +1,5 @@
-import time
-from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 import numpy as np
-import torch
 from Perceptron import Perceptron
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
@@ -39,12 +36,33 @@ def draw_picture(train_loader):
     plt.show()
 
 
-def main():
-    epochs = 300
-    learning_rate = 0.01
+def ensemble_perceptrons(num_perceptrons, train_data, input_size, num_classes, epochs, learning_rate, K, delta):
+    perceptrons = []
+    for i in range(num_perceptrons):
+        learning_rate -= 0.01
+        perceptron = Perceptron(feature_size=input_size + 1, num_classes=num_classes)
+        perceptron.sigm_classification(train_data, epochs, learning_rate, K, delta)
+        perceptrons.append(perceptron)
+        print(f"done for {i} perceptron")
+    return perceptrons
 
-    K = 60  # K шагов градиентного спуска
-    delta = 0.03  # Порог точности локального минимума
+
+def predict_ensemble(images, perceptrons):
+    predictions = []
+    for perceptron in perceptrons:
+        pred = perceptron.predict(images)
+        predictions.append(pred)
+    ensemble_predictions = np.array(predictions).T
+    final_predictions = np.apply_along_axis(lambda x: np.argmax(np.bincount(x)), axis=1, arr=ensemble_predictions)
+    return final_predictions
+
+
+def main():
+    epochs = 100
+    learning_rate = 0.10
+    num_perceptrons = 3
+    K = 40  # K шагов градиентного спуска
+    delta = 0.02  # Порог точности локального минимума
 
     train_loader, test_loader = dataset_load()
     draw_picture(train_loader)
@@ -63,38 +81,30 @@ def main():
         train_data.append(train_data_batch)
 
     train_data = np.vstack(train_data)
-    # train_data[:, -1] -= 1
     num_classes = len(classification_class)
-    perceptron = Perceptron(feature_size=input_size + 1, num_classes=num_classes)  # +1 для учета смещения
+
     print(f"start train, train data: {train_data.shape}, num_classes: {num_classes}")
-    # Обучаем перцептрон
-    perceptron.sigm_classification(train_data, epochs, learning_rate, K, delta)
+    perceptrons = ensemble_perceptrons(num_perceptrons, train_data, input_size, num_classes, epochs, learning_rate, K,
+                                       delta)
     print("end train")
 
-    # Предсказываем метки для тестового набора
     predictions = []
     true_labels = []
     for images, labels in test_loader:
-        # Преобразуем данные в numpy массивы
         images = images.view(images.shape[0], -1).numpy()
         labels = labels.numpy()
-
-        # Предсказываем метки
-        pred = perceptron.predict(images)
+        pred = predict_ensemble(images, perceptrons)
         predictions.extend(pred)
         true_labels.extend(labels)
 
-    # Преобразуем списки в numpy массивы
     predictions = np.array(predictions)
     true_labels = np.array(true_labels)
 
     # Оцениваем точность модели
-    predicted_labels = [classification_class[i] for i in np.argmax(predictions, axis=1)]
+    predicted_labels = [classification_class[i] for i in predictions]
     accuracy = np.mean(predicted_labels == true_labels)
-    # print(predicted_labels)
-    # print(true_labels)
     print(f'Accuracy: {accuracy}')
 
 
-classification_class = [3]
+classification_class = [1, 8, 4]
 main()

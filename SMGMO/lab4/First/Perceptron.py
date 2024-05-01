@@ -12,8 +12,8 @@ class Perceptron:
         return 1 / (1 + np.exp(-x))
 
     def softmax(self, x):
-        exps = np.exp(x - np.max(x, axis=1, keepdims=True))
-        return exps / np.sum(exps, axis=1, keepdims=True)
+        exps = np.exp(x)
+        return exps / np.sum(exps)
 
     def sigm_classification(self, train_data, epochs, ed_coef, K, delta):
         W_min = []
@@ -50,5 +50,8 @@ class Perceptron:
             raise ValueError(f"Data dimension does not match feature size: {data.shape[1]} != {self.feature_size - 1}")
 
         data_with_bias = np.hstack((np.ones(len(data)).reshape(-1, 1), data))
-        predictions = self.softmax(data_with_bias @ self.W.T)  # Apply softmax to get probabilities for each class
+
+        predictions = []
+        for i in range(len(data)):
+            predictions.append(np.argmax(self.softmax(self.W @ data_with_bias[i].reshape(-1, 1))))
         return predictions
