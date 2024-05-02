@@ -14,7 +14,6 @@ import lombok.*;
 public class Cashier {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cashier_id", nullable = false)
     private Long cashierId;
 

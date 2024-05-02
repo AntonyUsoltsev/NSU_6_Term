@@ -16,7 +16,6 @@ import java.util.List;
 public class Supplier {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "supplier_id", nullable = false)
     private Long supplierId;
 
@@ -26,8 +25,8 @@ public class Supplier {
     @Column(name = "documents", nullable = false)
     private String documents;
 
-    @Column(name = "type", nullable = false)
-    private String type;
+    @Column(name = "type_id", nullable = false)
+    private Long typeId;
 
     @Column(name = "garanty", nullable = false)
     private Boolean garanty;

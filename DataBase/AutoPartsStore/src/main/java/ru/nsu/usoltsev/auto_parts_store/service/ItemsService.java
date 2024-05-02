@@ -1,10 +1,12 @@
 package ru.nsu.usoltsev.auto_parts_store.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.nsu.usoltsev.auto_parts_store.exception.ResourceNotFoundException;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.ItemsDto;
-import ru.nsu.usoltsev.auto_parts_store.model.entity.Items;
+import ru.nsu.usoltsev.auto_parts_store.model.entity.Item;
 import ru.nsu.usoltsev.auto_parts_store.model.mapper.ItemsMapper;
 import ru.nsu.usoltsev.auto_parts_store.repository.ItemsRepository;
 
@@ -15,10 +17,12 @@ import java.util.stream.Collectors;
 public class ItemsService {
     @Autowired
     private ItemsRepository itemsRepository;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     public ItemsDto saveItem(ItemsDto itemsDto) {
-        Items customer = ItemsMapper.INSTANCE.fromDto(itemsDto);
-        Items savedItem = itemsRepository.saveAndFlush(customer);
+        Item customer = ItemsMapper.INSTANCE.fromDto(itemsDto);
+        Item savedItem = itemsRepository.saveAndFlush(customer);
         return ItemsMapper.INSTANCE.toDto(savedItem);
     }
 
@@ -38,6 +42,19 @@ public class ItemsService {
         return itemsRepository.findByCategory(category)
                 .stream()
                 .map(ItemsMapper.INSTANCE::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getTopTen(){
+        return itemsRepository.getTopTenSoldDetails()
+                .stream()
+                .map(a->{
+                    try {
+                       return objectMapper.writeValueAsString(a);
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .collect(Collectors.toList());
     }
 

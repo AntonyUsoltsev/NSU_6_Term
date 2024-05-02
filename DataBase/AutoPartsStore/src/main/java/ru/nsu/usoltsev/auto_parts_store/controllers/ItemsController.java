@@ -1,5 +1,7 @@
 package ru.nsu.usoltsev.auto_parts_store.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ItemsController {
     private ItemsService itemsRepository;
+    private ObjectMapper objectMapper;
 
     @GetMapping("/{id}")
     public ResponseEntity<ItemsDto> getItem(@PathVariable String id) {
@@ -23,6 +26,11 @@ public class ItemsController {
     @GetMapping("/all")
     public ResponseEntity<List<ItemsDto>> getItems() {
         return ResponseEntity.ok(itemsRepository.getItems());
+    }
+
+    @GetMapping("/top")
+    public ResponseEntity<List<String>> getTopTen() {
+        return ResponseEntity.ok(itemsRepository.getTopTen());
     }
 //
 //    @GetMapping("/{id}")

@@ -17,7 +17,6 @@ import java.util.List;
 public class Delivery {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "delivery_id", nullable = false)
     private Long deliveryId;
 

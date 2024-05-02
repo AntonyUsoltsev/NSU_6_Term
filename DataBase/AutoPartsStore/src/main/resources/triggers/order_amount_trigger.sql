@@ -5,7 +5,7 @@ DECLARE
 BEGIN
     -- ѕолучаем доступное количество деталей на складе
     SELECT amount INTO available_amount
-    FROM items
+    FROM item
     WHERE item_id = NEW.item_id;
 
     -- ѕровер€ем, достаточно ли деталей на складе дл€ заказа
@@ -17,7 +17,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER before_order_list_insert
+CREATE TRIGGER item_availability_check
     BEFORE INSERT ON order_list
     FOR EACH ROW
 EXECUTE FUNCTION check_item_availability();

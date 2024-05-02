@@ -16,7 +16,6 @@ import java.sql.Timestamp;
 public class Orders {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id", nullable = false)
     private Long orderId;
 

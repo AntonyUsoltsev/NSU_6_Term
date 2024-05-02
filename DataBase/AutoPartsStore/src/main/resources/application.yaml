@@ -16,3 +16,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    defer-datasource-initialization: true
+  sql:
+    init:
+      platform: postgres
+      mode: always
+      schema-locations: classpath:schema.sql

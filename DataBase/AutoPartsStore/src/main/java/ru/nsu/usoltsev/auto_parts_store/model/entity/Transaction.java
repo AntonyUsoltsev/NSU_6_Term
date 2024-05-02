@@ -1,6 +1,9 @@
 package ru.nsu.usoltsev.auto_parts_store.model.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -16,20 +19,19 @@ import java.sql.Timestamp;
 public class Transaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "transaction_id", nullable = false)
     private Long transactionId;
 
-    @Column(name = "order_id", nullable = false)
+    @Column(name = "order_id", nullable = false, unique = true)
     private Long orderId;
 
     @Column(name = "cashier_id", nullable = false)
     private Long cashierId;
 
-    @Column(name = "transaction_type", nullable = false)
-    private String transactionType;
+    @Column(name = "type_id", nullable = false)
+    private Long typeId;
 
-    @Column(name = "transaction_date", nullable = false)
+    @Column(name = "date", nullable = false)
     private Timestamp transactionDate;
 }
 
