@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.SupplierDto;
+import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.SupplierByTypeDto;
 import ru.nsu.usoltsev.auto_parts_store.service.SupplierService;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class SupplierController {
         return ResponseEntity.ok(supplierService.getSupplierById(Long.valueOf(id)));
     }
 
-    @GetMapping()
+    @GetMapping("/all")
     public ResponseEntity<List<SupplierDto>> getSuppliers() {
         return ResponseEntity.ok(supplierService.getSuppliers());
     }
@@ -31,4 +32,16 @@ public class SupplierController {
     public ResponseEntity<SupplierDto> createSupplier(@RequestBody SupplierDto supplierDto) {
         return new ResponseEntity<>(supplierService.saveSupplier(supplierDto), HttpStatus.CREATED);
     }
+
+    @GetMapping()
+    public ResponseEntity<SupplierByTypeDto> getSuppliersByType(@RequestParam("type") String type) {
+        return ResponseEntity.ok(supplierService.getSuppliersByType(type));
+    }
+
+    @GetMapping("/itemCategory")
+    public ResponseEntity<List<SupplierDto>> getSuppliersByItemCategory(@RequestParam("category") String category) {
+        return ResponseEntity.ok(supplierService.getSuppliersByItemCategory(category));
+    }
+
+
 }

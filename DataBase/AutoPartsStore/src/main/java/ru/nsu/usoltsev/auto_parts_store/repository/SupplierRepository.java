@@ -8,25 +8,26 @@ import ru.nsu.usoltsev.auto_parts_store.model.entity.Supplier;
 import java.util.List;
 
 public interface SupplierRepository extends JpaRepository<Supplier, Long> {
-    @Query(value =
-            "SELECT s, i.category " +
-                    "FROM Supplier s " +
-                    "JOIN Delivery d ON s.supplier_id = d.supplier_id " +
-                    "JOIN delivery_list dl ON d.delivery_id = dl.delivery_id " +
-                    "JOIN Items i ON dl.item_id = i.item_id " +
-                    "WHERE i.category = :category ",
-            nativeQuery = true)
+
+    @Query("SELECT s " +
+            "FROM Supplier s " +
+            "JOIN SupplierType st on s.typeId = st.typeId " +
+            "WHERE st.typeName = :type")
+    List<Supplier> findSuppliersByType(@Param("type") String type);
+
+    @Query("SELECT s " +
+            "FROM Supplier s " +
+            "JOIN Delivery d ON s.supplierId = d.supplierId " +
+            "JOIN DeliveryList dl ON d.deliveryId = dl.deliveryId " +
+            "JOIN Item i ON dl.itemId = i.itemId " +
+            "JOIN ItemCategory ic ON i.categoryId = ic.categoryId " +
+            "WHERE ic.categoryName = :category")
     List<Supplier> findSuppliersByItemCategory(@Param("category") String category);
 
-    @Query(value =
-            "SELECT COUNT(s), i.category " +
-                    "FROM Supplier s " +
-                    "JOIN Delivery d ON s.supplier_id = d.supplier_id " +
-                    "JOIN delivery_list dl ON d.delivery_id = dl.delivery_id " +
-                    "JOIN Items i ON dl.item_id = i.item_id " +
-                    "WHERE i.category = :category " +
-                    "GROUP BY i.category",
-            nativeQuery = true)
-    List<Supplier> findSuppliersCountByItemCategory(@Param("category") String category);
+    @Query("SELECT COUNT (DISTINCT s) " +
+            "FROM Supplier s " +
+            "JOIN SupplierType st on s.typeId = st.typeId " +
+            "WHERE st.typeName = :type")
+    Integer findSuppliersCountByType(@Param("type") String type);
 
 }

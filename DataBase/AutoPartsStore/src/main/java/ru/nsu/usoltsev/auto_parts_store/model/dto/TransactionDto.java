@@ -16,7 +16,7 @@ public class TransactionDto {
 
     private Cashier cashier;
 
-    private String transactionType;
+    private Long typeId;
 
     private Timestamp transactionDate;
 }

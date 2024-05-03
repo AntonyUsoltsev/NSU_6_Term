@@ -19,7 +19,7 @@ public class SupplierDto {
 
     private String documents;
 
-    private String type;
+    private Long typeId;
 
     private Boolean garanty;
 

@@ -12,8 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 public class CashierDto {
 
-    private Long cashierId;
-
     @NotBlank(message = "Name cannot be blank")
     @Pattern(regexp = "[a-zA-Zа-яА-Я]+", message = "Name can contain only letters")
     private String name;

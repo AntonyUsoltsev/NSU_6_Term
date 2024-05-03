@@ -5,12 +5,12 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ItemsDto {
+public class ItemDto {
     private Long itemId;
 
     private String name;
 
-    private String category;
+    private Long categoryId;
 
     private Integer amount;
 

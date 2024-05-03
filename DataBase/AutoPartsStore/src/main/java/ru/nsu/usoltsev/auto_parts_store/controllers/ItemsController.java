@@ -1,13 +1,13 @@
 package ru.nsu.usoltsev.auto_parts_store.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.nsu.usoltsev.auto_parts_store.model.dto.ItemsDto;
-import ru.nsu.usoltsev.auto_parts_store.service.ItemsService;
+import ru.nsu.usoltsev.auto_parts_store.model.dto.ItemDto;
+import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.ItemInfoDto;
+import ru.nsu.usoltsev.auto_parts_store.service.ItemService;
 
 import java.util.List;
 
@@ -15,16 +15,16 @@ import java.util.List;
 @RequestMapping("api/items")
 @AllArgsConstructor
 public class ItemsController {
-    private ItemsService itemsRepository;
+    private ItemService itemsRepository;
     private ObjectMapper objectMapper;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ItemsDto> getItem(@PathVariable String id) {
+    public ResponseEntity<ItemDto> getItem(@PathVariable String id) {
         return ResponseEntity.ok(itemsRepository.getItemById(Long.valueOf(id)));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ItemsDto>> getItems() {
+    public ResponseEntity<List<ItemDto>> getItems() {
         return ResponseEntity.ok(itemsRepository.getItems());
     }
 
@@ -32,10 +32,15 @@ public class ItemsController {
     public ResponseEntity<List<String>> getTopTen() {
         return ResponseEntity.ok(itemsRepository.getTopTen());
     }
+
+    @GetMapping("/info")
+    public ResponseEntity<List<ItemInfoDto>> getItemsInfo() {
+        return ResponseEntity.ok(itemsRepository.getItemsInfo());
+    }
 //
 //    @GetMapping("/{id}")
-//    public ResponseEntity<ItemsDto> getItemById(@PathVariable("id") Long id) {
-//        ItemsDto item = itemsRepository.getItemById(id);
+//    public ResponseEntity<ItemDto> getItemById(@PathVariable("id") Long id) {
+//        ItemDto item = itemsRepository.getItemById(id);
 //        if (item != null) {
 //            return ResponseEntity.ok(item);
 //        } else {
@@ -44,13 +49,15 @@ public class ItemsController {
 //    }
 
     @GetMapping()
-    public ResponseEntity<List<ItemsDto>> getItemsByCategory(@RequestParam("category") String category) {
-        List<ItemsDto> items = itemsRepository.getItemsByCategory(category);
+    public ResponseEntity<List<ItemDto>> getItemsByCategory(@RequestParam("category") String category) {
+        List<ItemDto> items = itemsRepository.getItemsByCategory(category);
         return ResponseEntity.ok(items);
     }
 
     @PostMapping()
-    public ResponseEntity<ItemsDto> createCustomer(@RequestBody ItemsDto itemDto) {
+    public ResponseEntity<ItemDto> createItem(@RequestBody ItemDto itemDto) {
         return new ResponseEntity<>(itemsRepository.saveItem(itemDto), HttpStatus.CREATED);
     }
+
+
 }
