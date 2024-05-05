@@ -43,5 +43,13 @@ public class SupplierController {
         return ResponseEntity.ok(supplierService.getSuppliersByItemCategory(category));
     }
 
+    @GetMapping("/delivery")
+    public ResponseEntity<List<SupplierDto>> getSuppliersByDelivery(@RequestParam("from") String fromDate,
+                                                                    @RequestParam("to") String toDate,
+                                                                    @RequestParam("amount") Integer amount,
+                                                                    @RequestParam("item") String item) {
+        return ResponseEntity.ok(supplierService.getSuppliersByDelivery(fromDate, toDate, amount, item));
+    }
+
 
 }

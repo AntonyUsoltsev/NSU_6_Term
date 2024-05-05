@@ -26,6 +26,21 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.getCustomers());
     }
 
+    @GetMapping("/byItemWithAmount")
+    public ResponseEntity<List<CustomerDto>> getCustomerByItem(@RequestParam("from") String fromDate,
+                                                               @RequestParam("to") String toDate,
+                                                               @RequestParam("amount") Integer amount,
+                                                               @RequestParam("item") String item) {
+        return ResponseEntity.ok(customerService.getCustomerByItem(fromDate, toDate, amount, item));
+    }
+    @GetMapping("/byItem")
+    public ResponseEntity<List<CustomerDto>> getCustomerByItem(@RequestParam("from") String fromDate,
+                                                               @RequestParam("to") String toDate,
+                                                               @RequestParam("item") String item) {
+        return ResponseEntity.ok(customerService.getCustomerByItem(fromDate, toDate, 0, item));
+    }
+
+
     @PostMapping()
     public ResponseEntity<CustomerDto> createCustomer(@RequestBody CustomerDto customerDto) {
         return new ResponseEntity<>(customerService.saveCustomer(customerDto), HttpStatus.CREATED);

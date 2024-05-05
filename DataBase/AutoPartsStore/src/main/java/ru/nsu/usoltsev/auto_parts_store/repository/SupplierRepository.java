@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.nsu.usoltsev.auto_parts_store.model.entity.Supplier;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface SupplierRepository extends JpaRepository<Supplier, Long> {
@@ -30,4 +31,17 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
             "WHERE st.typeName = :type")
     Integer findSuppliersCountByType(@Param("type") String type);
 
+
+    @Query("SELECT s " +
+            "FROM Supplier s " +
+            "JOIN Delivery d ON s.supplierId = d.supplierId " +
+            "JOIN DeliveryList dl ON d.deliveryId = dl.deliveryId " +
+            "JOIN Item i ON dl.itemId = i.itemId " +
+            "WHERE i.name = :item AND " +
+            "dl.amount >= :amount AND " +
+            ":fromDate <= d.deliveryDate AND d.deliveryDate <= :toDate ")
+    List<Supplier> findSuppliersByDelivery(@Param("fromDate")Timestamp fromDate,
+                                           @Param("toDate")Timestamp toDate,
+                                           @Param("amount")Integer amount,
+                                           @Param("item")String item);
 }

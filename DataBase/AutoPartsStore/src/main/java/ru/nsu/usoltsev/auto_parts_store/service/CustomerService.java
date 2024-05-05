@@ -11,6 +11,7 @@ import ru.nsu.usoltsev.auto_parts_store.model.entity.Customer;
 import ru.nsu.usoltsev.auto_parts_store.model.mapper.CustomerMapper;
 import ru.nsu.usoltsev.auto_parts_store.repository.CustomerRepository;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,4 +41,13 @@ public class CustomerService {
                 .collect(Collectors.toList());
     }
 
+
+    public List<CustomerDto> getCustomerByItem(String fromDate, String toDate, Integer amount, String item) {
+        Timestamp fromTime = Timestamp.valueOf(fromDate);
+        Timestamp toTime = Timestamp.valueOf(toDate);
+        return  customerRepository.findCustomerByItem(fromTime, toTime, amount, item)
+                .stream()
+                .map(CustomerMapper.INSTANCE::toDto)
+                .toList();
+    }
 }

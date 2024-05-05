@@ -6,11 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.nsu.usoltsev.auto_parts_store.exception.ResourceNotFoundException;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.ItemDto;
+import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.DefectItemsDto;
+import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.ItemDeliveryPriceDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.ItemInfoDto;
 import ru.nsu.usoltsev.auto_parts_store.model.entity.Item;
 import ru.nsu.usoltsev.auto_parts_store.model.mapper.ItemMapper;
 import ru.nsu.usoltsev.auto_parts_store.repository.ItemRepository;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,4 +74,33 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
+
+    public List<ItemDeliveryPriceDto> getItemDeliveryPrice() {
+        List<ItemDeliveryPriceDto> itemDeliveryPriceList = new ArrayList<>();
+        List<String> itemNames = itemRepository.getItemsNames();
+        for (String name : itemNames) {
+            List<ItemDeliveryPriceDto.SupplierDeliveryPrice> info = itemRepository.getSupplierPriceDateForItem(name)
+                    .stream()
+                    .map(row -> new ItemDeliveryPriceDto.SupplierDeliveryPrice(
+                            (String) row[0],
+                            (Integer) row[1],
+                            (Timestamp) row[2]
+                    )).toList();
+            itemDeliveryPriceList.add(new ItemDeliveryPriceDto(name, info));
+        }
+        return itemDeliveryPriceList;
+    }
+
+    public List<DefectItemsDto> getDefectItems(String fromDate, String toDate) {
+        Timestamp fromTime = Timestamp.valueOf(fromDate);
+        Timestamp toTime = Timestamp.valueOf(toDate);
+        return itemRepository.findDefectItems(fromTime, toTime)
+                .stream()
+                .map(row -> new DefectItemsDto(
+                        (String) row[0],
+                        (Integer) row[1],
+                        (Timestamp) row[2],
+                        (String) row[3]
+                )).toList();
+    }
 }

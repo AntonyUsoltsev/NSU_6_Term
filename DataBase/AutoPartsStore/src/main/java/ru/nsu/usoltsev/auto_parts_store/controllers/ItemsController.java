@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.ItemDto;
+import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.DefectItemsDto;
+import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.ItemDeliveryPriceDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.ItemInfoDto;
 import ru.nsu.usoltsev.auto_parts_store.service.ItemService;
 
@@ -37,6 +39,32 @@ public class ItemsController {
     public ResponseEntity<List<ItemInfoDto>> getItemsInfo() {
         return ResponseEntity.ok(itemsRepository.getItemsInfo());
     }
+
+    @GetMapping("/deliveryPrice")
+    public ResponseEntity<List<ItemDeliveryPriceDto>> getItemDeliveryPrice() {
+        return ResponseEntity.ok(itemsRepository.getItemDeliveryPrice());
+    }
+
+    @GetMapping("/defect")
+    public ResponseEntity<List<DefectItemsDto>> getDefectItems(@RequestParam("from") String fromDate,
+                                                               @RequestParam("to") String toDate) {
+        List<DefectItemsDto> items = itemsRepository.getDefectItems(fromDate, toDate);
+        return ResponseEntity.ok(items);
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<ItemDto>> getItemsByCategory(@RequestParam("category") String category) {
+        List<ItemDto> items = itemsRepository.getItemsByCategory(category);
+        return ResponseEntity.ok(items);
+    }
+
+
+
+    @PostMapping()
+    public ResponseEntity<ItemDto> createItem(@RequestBody ItemDto itemDto) {
+        return new ResponseEntity<>(itemsRepository.saveItem(itemDto), HttpStatus.CREATED);
+    }
+
 //
 //    @GetMapping("/{id}")
 //    public ResponseEntity<ItemDto> getItemById(@PathVariable("id") Long id) {
@@ -47,17 +75,5 @@ public class ItemsController {
 //            return ResponseEntity.notFound().build();
 //        }
 //    }
-
-    @GetMapping()
-    public ResponseEntity<List<ItemDto>> getItemsByCategory(@RequestParam("category") String category) {
-        List<ItemDto> items = itemsRepository.getItemsByCategory(category);
-        return ResponseEntity.ok(items);
-    }
-
-    @PostMapping()
-    public ResponseEntity<ItemDto> createItem(@RequestBody ItemDto itemDto) {
-        return new ResponseEntity<>(itemsRepository.saveItem(itemDto), HttpStatus.CREATED);
-    }
-
 
 }

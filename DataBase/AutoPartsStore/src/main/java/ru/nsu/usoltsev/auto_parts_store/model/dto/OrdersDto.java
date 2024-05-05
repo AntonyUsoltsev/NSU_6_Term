@@ -12,7 +12,7 @@ public class OrdersDto {
 
     private Long orderId;
 
-    private Customer customer;
+    private CustomerDto customer;
 
     private Timestamp orderDate;
 

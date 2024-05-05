@@ -48,9 +48,10 @@ create table if not exists item
 
 create table if not exists delivery_list
 (
-    item_id     bigint not null,
-    delivery_id bigint not null,
-    amount      bigint not null,
+    item_id        bigint not null,
+    delivery_id    bigint not null,
+    amount         bigint not null,
+    purchase_price bigint not null,
     primary key (item_id, delivery_id),
     foreign key (delivery_id) references delivery (delivery_id),
     foreign key (item_id) references item (item_id)

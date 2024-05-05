@@ -10,6 +10,9 @@ import ru.nsu.usoltsev.auto_parts_store.model.entity.Supplier;
 import ru.nsu.usoltsev.auto_parts_store.model.mapper.SupplierMapper;
 import ru.nsu.usoltsev.auto_parts_store.repository.SupplierRepository;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +49,7 @@ public class SupplierService {
     }
 
     public SupplierByTypeDto getSuppliersByType(String type) {
-        List<SupplierDto> supplierDtos =  supplierRepository.findSuppliersByType(type)
+        List<SupplierDto> supplierDtos = supplierRepository.findSuppliersByType(type)
                 .stream()
                 .map(SupplierMapper.INSTANCE::toDto)
                 .toList();
@@ -54,4 +57,12 @@ public class SupplierService {
         return new SupplierByTypeDto(supplierDtos, count);
     }
 
+    public List<SupplierDto> getSuppliersByDelivery(String fromDate, String toDate, Integer amount, String item) {
+        Timestamp fromTime = Timestamp.valueOf(fromDate);
+        Timestamp toTime = Timestamp.valueOf(toDate);
+        return supplierRepository.findSuppliersByDelivery(fromTime, toTime, amount, item)
+                .stream()
+                .map(SupplierMapper.INSTANCE::toDto)
+                .collect(Collectors.toList());
+    }
 }
