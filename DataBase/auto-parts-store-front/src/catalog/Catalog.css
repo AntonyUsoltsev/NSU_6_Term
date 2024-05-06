@@ -1,0 +1,9 @@
+.catalog-header {
+    margin-top: 5vh;
+    color: #000000;
+    min-height: 6vh;
+    font-size: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

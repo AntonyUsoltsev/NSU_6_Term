@@ -1,0 +1,73 @@
+.burgerIcon {
+    position: absolute;
+    top: 50%;
+    left: 2%; /* Регулируйте расстояние иконки от края кнопки */
+    transform: translateY(-50%);
+    color: white;
+    font-size: 40px; /* Регулируйте размер иконки по вашему вкусу */
+}
+
+.mainMenuContainer {
+    display: flex;
+    align-items: normal;
+}
+
+
+.catalogButton {
+    position: fixed;
+    top: 50px;
+    left: 165px;
+    width: 150px;
+    height: 60px;
+    background-color: blue;
+    border-radius: 20px;
+}
+.cartButton {
+    position: fixed;
+    top: 50px;
+    left: 365px;
+    width: 150px;
+    height: 60px;
+    background-color: blue;
+    border-radius: 20px;
+}
+
+.infoButton {
+    position: fixed;
+    top: 50px;
+    left: 565px;
+    width: 150px;
+    height: 60px;
+    background-color: blue;
+    border-radius: 20px;
+}
+.catalogButton span {
+    position: absolute;
+    top: 50%;
+    left: 20px; /* Положение иконки */
+    transform: translateY(-50%);
+    color: white;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+}
+
+
+.cartButton span {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+}
+.infoButton span {
+    position: absolute;
+    top: 50%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+}
+
