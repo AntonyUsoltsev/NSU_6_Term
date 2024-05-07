@@ -49,6 +49,18 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "WHERE i.defectAmount > 0 AND " +
             ":fromDate <= d.deliveryDate AND d.deliveryDate <= :toDate ")
     List<Object[]> findDefectItems(@Param("fromDate") Timestamp fromDate,
-                                      @Param("toDate") Timestamp toDate);
+                                   @Param("toDate") Timestamp toDate);
 
+    @Query("SELECT i.name, ic.categoryName " +
+            "FROM Item i " +
+            "LEFT JOIN ItemCategory ic on i.categoryId = ic.categoryId")
+    List<Object[]> getItemsCatalog();
+
+    @Query("SELECT i.amount, i.price, s.name " +
+            "FROM Item i " +
+            "LEFT JOIN DeliveryList dl on i.itemId = dl.itemId " +
+            "LEFT JOIN Delivery d on dl.deliveryId = d.deliveryId " +
+            "LEFT JOIN Supplier s on d.supplierId = s.supplierId " +
+            "WHERE i.name = :name ")
+    List<Object[]> getSupplierItemInfo(@Param("name")  String name);
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.nsu.usoltsev.auto_parts_store.exception.ResourceNotFoundException;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.ItemDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.DefectItemsDto;
+import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.ItemCatalogDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.ItemDeliveryPriceDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.ItemInfoDto;
 import ru.nsu.usoltsev.auto_parts_store.model.entity.Item;
@@ -49,8 +50,7 @@ public class ItemService {
                 .map(row -> new ItemInfoDto(
                         (String) row[0],
                         (Integer) row[1],
-                        (Integer) row[2]
-                ))
+                        (Integer) row[2]))
                 .collect(Collectors.toList());
     }
 
@@ -84,8 +84,8 @@ public class ItemService {
                     .map(row -> new ItemDeliveryPriceDto.SupplierDeliveryPrice(
                             (String) row[0],
                             (Integer) row[1],
-                            (Timestamp) row[2]
-                    )).toList();
+                            (Timestamp) row[2]))
+                    .toList();
             itemDeliveryPriceList.add(new ItemDeliveryPriceDto(name, info));
         }
         return itemDeliveryPriceList;
@@ -100,7 +100,27 @@ public class ItemService {
                         (String) row[0],
                         (Integer) row[1],
                         (Timestamp) row[2],
-                        (String) row[3]
-                )).toList();
+                        (String) row[3]))
+                .toList();
+    }
+
+    public List<ItemCatalogDto> getItemsCatalog() {
+        List<ItemCatalogDto> ItemCatalogDtos = new ArrayList<>();
+        List<Object[]> itemsInfo = itemRepository.getItemsCatalog();
+
+        for (Object[] row : itemsInfo) {
+            List<ItemCatalogDto.SupplierItemInfo> info = itemRepository.getSupplierItemInfo((String) row[0])
+                    .stream()
+                    .map(array -> new ItemCatalogDto.SupplierItemInfo(
+                            (Integer) array[0],
+                            (Integer) array[1],
+                            (String) array[2]))
+                    .toList();
+            ItemCatalogDtos.add(new ItemCatalogDto(
+                    (String) row[0],
+                    (String) row[1],
+                    info));
+        }
+        return ItemCatalogDtos;
     }
 }

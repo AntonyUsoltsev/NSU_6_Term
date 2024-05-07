@@ -7,6 +7,8 @@ import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
+
+// Todo: inner class amount-date-supplier
 public class DefectItemsDto {
     private String itemName;
     private Integer defectAmount;

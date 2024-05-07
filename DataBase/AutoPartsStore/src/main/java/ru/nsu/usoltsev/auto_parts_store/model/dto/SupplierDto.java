@@ -12,14 +12,12 @@ import java.util.List;
 @AllArgsConstructor
 public class SupplierDto {
 
-    private Long supplierId;
-
     @NotBlank(message = "Name cannot be blank")
     private String name;
 
     private String documents;
 
-    private Long typeId;
+    private String typeName;
 
     private Boolean garanty;
 

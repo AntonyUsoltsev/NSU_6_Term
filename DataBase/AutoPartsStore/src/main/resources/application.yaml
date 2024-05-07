@@ -22,3 +22,8 @@ spring:
       platform: postgres
       mode: always
       schema-locations: classpath:schema.sql
+
+
+server:
+  servlet:
+    context-path: /AutoPartsStore

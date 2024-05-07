@@ -12,6 +12,7 @@ import ru.nsu.usoltsev.auto_parts_store.service.SupplierService;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("api/suppliers")
 @AllArgsConstructor
 public class SupplierController {

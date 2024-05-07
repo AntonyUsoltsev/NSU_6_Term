@@ -2,11 +2,13 @@ package ru.nsu.usoltsev.auto_parts_store.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.ItemDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.DefectItemsDto;
+import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.ItemCatalogDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.ItemDeliveryPriceDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.ItemInfoDto;
 import ru.nsu.usoltsev.auto_parts_store.service.ItemService;
@@ -15,7 +17,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/items")
+@CrossOrigin
 @AllArgsConstructor
+@Slf4j
 public class ItemsController {
     private ItemService itemsRepository;
     private ObjectMapper objectMapper;
@@ -38,6 +42,12 @@ public class ItemsController {
     @GetMapping("/info")
     public ResponseEntity<List<ItemInfoDto>> getItemsInfo() {
         return ResponseEntity.ok(itemsRepository.getItemsInfo());
+    }
+
+    @GetMapping("/catalog")
+    public ResponseEntity<List<ItemCatalogDto>> getItemsCatalog() {
+        log.info("Get catalog");
+        return ResponseEntity.ok(itemsRepository.getItemsCatalog());
     }
 
     @GetMapping("/deliveryPrice")
