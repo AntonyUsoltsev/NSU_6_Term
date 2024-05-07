@@ -24,10 +24,10 @@ export default class PostService {
         }
     }
 
-    static async getCourses(universityName: any) {
-        console.log(`http://localhost:8080/student_compass/${universityName}`)
+
+    static async getCashReport(startDate: any, endDate: any) {
         try {
-            const value = await axios.get(`http://localhost:8080/student_compass/${universityName}`);
+            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/transactions/cashReport?from=${startDate}&to=${endDate}`);
             console.log(value)
             return value;
         } catch (error) {
@@ -35,10 +35,9 @@ export default class PostService {
         }
     }
 
-    static async getSubjects(universityName: string, courseValue: string) {
-        console.log(`http://localhost:8080/student_compass/${universityName}/${courseValue}`)
+    static async getDefectItems(startDate: any, endDate: any) {
         try {
-            const value = await axios.get(`http://localhost:8080/student_compass/${universityName}/${courseValue}`);
+            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/items/defect?from=${startDate}&to=${endDate}`);
             console.log(value)
             return value;
         } catch (error) {
@@ -46,26 +45,44 @@ export default class PostService {
         }
     }
 
-    static async getBooks(universityName: any, courseValue: any, selectedSubject: any) {
-        console.log(`http://localhost:8080/student_compass/${universityName}/${courseValue}/${selectedSubject}`)
+    static async getSuppliersByType(category: any) {
         try {
-            const value = await axios.get(`http://localhost:8080/student_compass/${universityName}/${courseValue}/${selectedSubject}`);
+            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/suppliers?type=${category}`);
             console.log(value)
             return value;
         } catch (error) {
             this.errorHandler(error);
         }
     }
-    static async getReviews(universityName: any, courseValue: any, selectedSubject: any) {
-        try {
-            const value = await axios.get(`http://localhost:8080/student_compass/${universityName}/${courseValue}/${selectedSubject}/reviews`);
-            console.log(value)
-            return value;
-        } catch (error) {
-            this.errorHandler(error);
-        }
-    }
-    static async postReview(){
 
+    static async getSuppliersByItemType(category: any) {
+        try {
+            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/suppliers/itemCategory?category=${category}`);
+            console.log(value)
+            return value;
+        } catch (error) {
+            this.errorHandler(error);
+        }
+    }
+
+    static async getSuppliersByDelivery(startDate: any, endDate: any, amount: any, itemName: any) {
+        try {
+            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/suppliers/delivery?from=${startDate}&to=${endDate}&amount=${amount}&item=${itemName}`);
+            console.log(value)
+            return value;
+        } catch (error) {
+            this.errorHandler(error);
+        }
+    }
+
+
+    static async  getItemsDeliveryPriceInfo() {
+        try {
+            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/items/deliveryPrice`);
+            console.log(value)
+            return value;
+        } catch (error) {
+            this.errorHandler(error);
+        }
     }
 }

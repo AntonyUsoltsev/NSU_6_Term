@@ -1,13 +1,27 @@
 import React from "react";
-import {Spin, Table} from "antd";
+import "../contacts/contactPage.css";
 
 const ContactPage: React.FC = () => {
 
     return (
         <div>
-            <header>Контакты</header>
-
-
+            <header style={{
+                fontSize: '24px',
+                fontWeight: 'bold',
+            }}
+            >
+                Контакты:
+            </header>
+            <div>
+                <a
+                    href="https://t.me/malignantt"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={'link'}
+                >
+                    Напишите мне в Telegram
+                </a>
+            </div>
         </div>
     );
 }

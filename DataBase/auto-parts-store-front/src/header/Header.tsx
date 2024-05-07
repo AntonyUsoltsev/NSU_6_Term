@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {FaShoppingCart} from "react-icons/fa";
 import {useHistory} from "react-router-dom";
+import "../header/Header.css"
 
 const Header = () => {
 
@@ -19,6 +20,7 @@ const Header = () => {
                 <ul className='nav'>
                     <li onClick={() => handleButtonClick("/catalog")}>Каталог</li>
                     <li onClick={() => handleButtonClick("/info")}>Информация</li>
+                    <li onClick={() => handleButtonClick("/editing")}>Редактирование</li>
                     <li onClick={() => handleButtonClick("/contacts")}>Контакты</li>
                 </ul>
                 <FaShoppingCart onClick={() => setCartOpen(cartOpen = !cartOpen)}

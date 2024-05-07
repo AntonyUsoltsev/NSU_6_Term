@@ -1,0 +1,42 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@300;600&display=swap');
+
+* {
+    font-family: "Montserrat", sans-serif;
+    margin: 0;
+    padding: 0;
+    outline: none;
+    border: none;
+}
+
+
+.accordion {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    outline: none;
+    font-size: 24px;
+    transition: 0.4s;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border: 1px solid #939090;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+}
+
+.active, .accordion:hover {
+    background-color: #ccc;
+}
+
+.panel {
+    margin-top: -10px;
+    padding: 30px 18px;
+    display: none;
+    background-color: white;
+    overflow: hidden;
+}
