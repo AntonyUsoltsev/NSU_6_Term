@@ -76,9 +76,49 @@ export default class PostService {
     }
 
 
-    static async  getItemsDeliveryPriceInfo() {
+    static async getItemsDeliveryPriceInfo() {
         try {
             const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/items/deliveryPrice`);
+            console.log(value)
+            return value;
+        } catch (error) {
+            this.errorHandler(error);
+        }
+    }
+
+    static async getCustomerByItem(startDate: any, endDate: any, itemName: any) {
+        try {
+            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/customers/byItem?from=${startDate}&to=${endDate}&item=${itemName}`);
+            console.log(value)
+            return value;
+        } catch (error) {
+            this.errorHandler(error);
+        }
+    }
+
+    static async getCustomerByItemWithAmount(startDate: any, endDate: any, amount: any, itemName: any) {
+        try {
+            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/customers/byItemWithAmount?from=${startDate}&to=${endDate}&amount=${amount}&item=${itemName}`);
+            console.log(value)
+            return value;
+        } catch (error) {
+            this.errorHandler(error);
+        }
+    }
+
+    static async getItemsInfo() {
+        try {
+            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/items/info`);
+            console.log(value)
+            return value;
+        } catch (error) {
+            this.errorHandler(error);
+        }
+    }
+
+    static async getItemsTopTen() {
+        try {
+            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/items/top`);
             console.log(value)
             return value;
         } catch (error) {

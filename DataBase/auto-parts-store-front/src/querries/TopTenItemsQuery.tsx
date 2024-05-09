@@ -2,14 +2,14 @@ import React, {useState} from "react";
 import {Form, Button, Table} from "antd";
 import PostService from "../postService/PostService";
 
-const ItemDeliveryPriceInfo = () => {
+const TopTenItemsQuery = () => {
     const [form] = Form.useForm();
     const [activeQuery, setActiveQuery] = useState<boolean>(false);
     const [itemsData, setItemsData] = useState<any[]>([]);
 
     const handleSubmit = () => {
         setActiveQuery(true);
-        PostService.getItemsDeliveryPriceInfo().then((response: any) => {
+        PostService.getItemsTopTen().then((response: any) => {
             setItemsData(response.data);
         });
     };
@@ -21,19 +21,10 @@ const ItemDeliveryPriceInfo = () => {
             key: "name",
         },
         {
-            title: "Поставщик",
-            dataIndex: "supplierDeliveryPriceList",
-            key: "supplierDeliveryPriceList",
-            render: (supplierList: any[]) => (
-                <ul>
-                    {supplierList.map((supplier, index) => (
-                        <li key={index}>
-                            {supplier.supplierName}:  {supplier.price} руб
-                        </li>
-                    ))}
-                </ul>
-            ),
-        },
+            title: "Количество",
+            dataIndex: "amount",
+            key: "amount",
+        }
     ];
 
     return (
@@ -55,4 +46,4 @@ const ItemDeliveryPriceInfo = () => {
     );
 };
 
-export default ItemDeliveryPriceInfo;
+export default TopTenItemsQuery;
