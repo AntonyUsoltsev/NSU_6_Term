@@ -134,4 +134,54 @@ export default class PostService {
             this.errorHandler(error);
         }
     }
+
+    static async getRealisedItems(day: any) {
+        try {
+            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/transactions/realised?date=${day}`);
+            console.log(value)
+            return value;
+        } catch (error) {
+            this.errorHandler(error);
+        }
+    }
+
+    static async getSellingSpeed() {
+        try {
+            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/transactions/sellSpeed`);
+            console.log(value)
+            return value;
+        } catch (error) {
+            this.errorHandler(error);
+        }
+    }
+
+    static async getInventoryList() {
+        try {
+            const value = await axios.get(` http://localhost:8080/AutoPartsStore/api/items/all`);
+            console.log(value)
+            return value;
+        } catch (error) {
+            this.errorHandler(error);
+        }
+    }
+
+    static async getStoreCapacity() {
+        try {
+            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/items/storeCapacity`);
+            console.log(value)
+            return value;
+        } catch (error) {
+            this.errorHandler(error);
+        }
+    }
+
+    static async getAverageSell() {
+        try {
+            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/transactions/averageSell`);
+            console.log(value)
+            return value;
+        } catch (error) {
+            this.errorHandler(error);
+        }
+    }
 }

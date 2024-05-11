@@ -10,6 +10,11 @@ import CustomerByItemQuery from "../querries/CustomerByItemQuery";
 import CustomerByItemWithAmountQuery from "../querries/CustomerByItemWithAmontQuery";
 import ItemsInfoQuery from "../querries/ItemsInfoQuery";
 import TopTenItemsQuery from "../querries/TopTenItemsQuery";
+import RealisedItemsByDayQuery from "../querries/RealisedItemsByDayQuery";
+import SellingSpeedQuery from "../querries/SellingSpeedQuery";
+import InventoryListQuery from "../querries/InventoryListQuery";
+import StoreCapacityQuery from "../querries/StoreCapacityQuery";
+import AverageSellQuery from "../querries/AverageSellQuery";
 
 const InformationPage: React.FC = () => {
     const [activeIndexes, setActiveIndexes] = useState<number[]>([]);
@@ -51,7 +56,8 @@ const InformationPage: React.FC = () => {
                 className={`accordion ${activeIndexes.includes(3) ? "active" : ""}`}
                 onClick={() => handleAccordionClick(3)}
             >
-                3. Получить перечень поставщиков поставивших указанный товар в объеме, не менее заданного за определенный
+                3. Получить перечень поставщиков поставивших указанный товар в объеме, не менее заданного за
+                определенный
                 период
                 <i className="fas fa-angle-down"></i>
             </button>
@@ -77,7 +83,8 @@ const InformationPage: React.FC = () => {
                 className={`accordion ${activeIndexes.includes(5) ? "active" : ""}`}
                 onClick={() => handleAccordionClick(5)}
             >
-                5. Получить перечень и общее число покупателей, купивших указанный вид товара за некоторый период не менее указанного объема
+                5. Получить перечень и общее число покупателей, купивших указанный вид товара за некоторый период не
+                менее указанного объема
                 <i className="fas fa-angle-down"></i>
             </button>
             <div className="panel" style={{display: activeIndexes.includes(5) ? "block" : "none"}}>
@@ -105,7 +112,6 @@ const InformationPage: React.FC = () => {
                 <i className="fas fa-angle-down"></i>
             </button>
             <div className="panel" style={{display: activeIndexes.includes(7) ? "block" : "none"}}>
-                <p style={{marginBottom: "20px"}}>Параметры:</p>
                 <ItemsInfoQuery/>
             </div>
 
@@ -117,11 +123,19 @@ const InformationPage: React.FC = () => {
                 <i className="fas fa-angle-down"></i>
             </button>
             <div className="panel" style={{display: activeIndexes.includes(8) ? "block" : "none"}}>
-                <p style={{marginBottom: "20px"}}>Параметры:</p>
                 <TopTenItemsQuery/>
             </div>
 
-
+            <button
+                className={`accordion ${activeIndexes.includes(10) ? "active" : ""}`}
+                onClick={() => handleAccordionClick(10)}
+            >
+                10. Получить среднее число продаж на месяц по любому виду деталей
+                <i className="fas fa-angle-down"></i>
+            </button>
+            <div className="panel" style={{display: activeIndexes.includes(10) ? "block" : "none"}}>
+                <AverageSellQuery/>
+            </div>
 
 
             <button
@@ -145,7 +159,7 @@ const InformationPage: React.FC = () => {
             </button>
             <div className="panel" style={{display: activeIndexes.includes(15) ? "block" : "none"}}>
                 <p style={{marginBottom: "20px"}}>Параметры:</p>
-                <TopTenItemsQuery/>
+                <RealisedItemsByDayQuery/>
             </div>
 
             <button
@@ -158,6 +172,39 @@ const InformationPage: React.FC = () => {
             <div className="panel" style={{display: activeIndexes.includes(16) ? "block" : "none"}}>
                 <p style={{marginBottom: "20px"}}>Параметры:</p>
                 <CashReportQuery/>
+            </div>
+
+            <button
+                className={`accordion ${activeIndexes.includes(17) ? "active" : ""}`}
+                onClick={() => handleAccordionClick(17)}
+            >
+                17. Получить инвентаризационную ведомость
+                <i className="fas fa-angle-down"></i>
+            </button>
+            <div className="panel" style={{display: activeIndexes.includes(17) ? "block" : "none"}}>
+                <InventoryListQuery/>
+            </div>
+
+            <button
+                className={`accordion ${activeIndexes.includes(18) ? "active" : ""}`}
+                onClick={() => handleAccordionClick(18)}
+            >
+                18. Получить скорость оборота денежных средств, вложенных в товар
+                <i className="fas fa-angle-down"></i>
+            </button>
+            <div className="panel" style={{display: activeIndexes.includes(18) ? "block" : "none"}}>
+                <SellingSpeedQuery/>
+            </div>
+
+            <button
+                className={`accordion ${activeIndexes.includes(19) ? "active" : ""}`}
+                onClick={() => handleAccordionClick(19)}
+            >
+                19. Подсчитать сколько пустых ячеек на складе и сколько он сможет вместить товара
+                <i className="fas fa-angle-down"></i>
+            </button>
+            <div className="panel" style={{display: activeIndexes.includes(19) ? "block" : "none"}}>
+                <StoreCapacityQuery/>
             </div>
 
         </div>
