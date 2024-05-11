@@ -35,8 +35,8 @@ public class SupplierController {
     }
 
     @GetMapping()
-    public ResponseEntity<SupplierByTypeDto> getSuppliersByType(@RequestParam("type") String type) {
-        return ResponseEntity.ok(supplierService.getSuppliersByType(type));
+    public ResponseEntity<SupplierByTypeDto> getSuppliersByType(@RequestParam("type") Long typeId) {
+        return ResponseEntity.ok(supplierService.getSuppliersByType(typeId));
     }
 
     @GetMapping("/itemCategory")

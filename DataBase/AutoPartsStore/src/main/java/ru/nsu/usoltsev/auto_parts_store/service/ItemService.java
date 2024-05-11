@@ -1,15 +1,11 @@
 package ru.nsu.usoltsev.auto_parts_store.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.nsu.usoltsev.auto_parts_store.exception.ResourceNotFoundException;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.ItemDto;
-import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.DefectItemsDto;
-import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.ItemCatalogDto;
-import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.ItemDeliveryPriceDto;
-import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.ItemInfoDto;
+import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.*;
 import ru.nsu.usoltsev.auto_parts_store.model.entity.Item;
 import ru.nsu.usoltsev.auto_parts_store.model.mapper.ItemMapper;
 import ru.nsu.usoltsev.auto_parts_store.repository.ItemRepository;
@@ -23,8 +19,6 @@ import java.util.stream.Collectors;
 public class ItemService {
     @Autowired
     private ItemRepository itemRepository;
-    @Autowired
-    private ObjectMapper objectMapper;
 
     public ItemDto saveItem(ItemDto itemDto) {
         Item customer = ItemMapper.INSTANCE.fromDto(itemDto);
@@ -61,17 +55,14 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
-    public List<String> getTopTen() {
+    public List<TopTenItemsDto> getTopTen() {
         return itemRepository.getTopTenSoldDetails()
                 .stream()
-                .map(a -> {
-                    try {
-                        return objectMapper.writeValueAsString(a);
-                    } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .collect(Collectors.toList());
+                .map(row -> new TopTenItemsDto(
+                        (String) row[0],
+                        (Long) row[1]
+                ))
+                .toList();
     }
 
 

@@ -11,11 +11,11 @@ import java.util.List;
 
 public interface SupplierRepository extends JpaRepository<Supplier, Long> {
 
-    @Query("SELECT new ru.nsu.usoltsev.auto_parts_store.model.dto.SupplierDto(s.name, s.documents, st.typeName, s.garanty) " +
+    //TODO : supplier type id из фронта
+    @Query("SELECT new ru.nsu.usoltsev.auto_parts_store.model.dto.SupplierDto(s.name, s.documents, 'someType' , s.garanty) " +
             "FROM Supplier s " +
-            "JOIN SupplierType st on s.typeId = st.typeId " +
-            "WHERE st.typeName = :type")
-    List<SupplierDto> findSuppliersByType(@Param("type") String type);
+            "WHERE s.typeId = :type")
+    List<SupplierDto> findSuppliersByType(@Param("type") Long type);
 
 
     //TODO: remake object[]
@@ -31,9 +31,8 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
 
     @Query("SELECT COUNT (DISTINCT s) " +
             "FROM Supplier s " +
-            "JOIN SupplierType st on s.typeId = st.typeId " +
-            "WHERE st.typeName = :type")
-    Integer findSuppliersCountByType(@Param("type") String type);
+            "WHERE s.typeId = :type")
+    Integer findSuppliersCountByType(@Param("type") Long type);
 
 
     @Query("SELECT new ru.nsu.usoltsev.auto_parts_store.model.dto.SupplierDto(s.name, s.documents, st.typeName, s.garanty)  " +

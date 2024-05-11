@@ -9,9 +9,10 @@ import ru.nsu.usoltsev.auto_parts_store.service.CustomerService;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
-@RequestMapping("api/customers")
 @AllArgsConstructor
+@RequestMapping("api/customers")
 public class CustomerController {
 
     private CustomerService customerService;
@@ -33,6 +34,7 @@ public class CustomerController {
                                                                @RequestParam("item") String item) {
         return ResponseEntity.ok(customerService.getCustomerByItem(fromDate, toDate, amount, item));
     }
+
     @GetMapping("/byItem")
     public ResponseEntity<List<CustomerDto>> getCustomerByItem(@RequestParam("from") String fromDate,
                                                                @RequestParam("to") String toDate,

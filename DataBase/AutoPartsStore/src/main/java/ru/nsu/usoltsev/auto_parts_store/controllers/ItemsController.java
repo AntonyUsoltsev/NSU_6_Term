@@ -7,10 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.ItemDto;
-import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.DefectItemsDto;
-import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.ItemCatalogDto;
-import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.ItemDeliveryPriceDto;
-import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.ItemInfoDto;
+import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.*;
 import ru.nsu.usoltsev.auto_parts_store.service.ItemService;
 
 import java.util.List;
@@ -35,7 +32,7 @@ public class ItemsController {
     }
 
     @GetMapping("/top")
-    public ResponseEntity<List<String>> getTopTen() {
+    public ResponseEntity<List<TopTenItemsDto>> getTopTen() {
         return ResponseEntity.ok(itemsRepository.getTopTen());
     }
 

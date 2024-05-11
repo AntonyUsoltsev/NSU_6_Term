@@ -51,7 +51,7 @@ public class SupplierService {
                 .toList();
     }
 
-    public SupplierByTypeDto getSuppliersByType(String type) {
+    public SupplierByTypeDto getSuppliersByType(Long type) {
         List<SupplierDto> supplierDtos = supplierRepository.findSuppliersByType(type);
         Integer count = supplierRepository.findSuppliersCountByType(type);
         return new SupplierByTypeDto(supplierDtos, count);
