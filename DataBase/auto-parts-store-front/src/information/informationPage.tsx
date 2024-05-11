@@ -6,7 +6,6 @@ import SupplierQuery from "../querries/SupplierQuery";
 import SupplierByItemQuery from "../querries/SupplierByItemQuery";
 import SupplierByDeliveryQuery from "../querries/SupplierByDeliveryQuery";
 import ItemDeliveryPriceInfo from "../querries/ItemDeliveryPriceInfo";
-import {AiFillCustomerService} from "react-icons/ai";
 import CustomerByItemQuery from "../querries/CustomerByItemQuery";
 import CustomerByItemWithAmountQuery from "../querries/CustomerByItemWithAmontQuery";
 import ItemsInfoQuery from "../querries/ItemsInfoQuery";
@@ -122,6 +121,9 @@ const InformationPage: React.FC = () => {
                 <TopTenItemsQuery/>
             </div>
 
+
+
+
             <button
                 className={`accordion ${activeIndexes.includes(14) ? "active" : ""}`}
                 onClick={() => handleAccordionClick(14)}
@@ -132,6 +134,18 @@ const InformationPage: React.FC = () => {
             <div className="panel" style={{display: activeIndexes.includes(14) ? "block" : "none"}}>
                 <p style={{marginBottom: "20px"}}>Параметры:</p>
                 <DefectItemsQuery/>
+            </div>
+
+            <button
+                className={`accordion ${activeIndexes.includes(15) ? "active" : ""}`}
+                onClick={() => handleAccordionClick(15)}
+            >
+                15. Получить перечень, общее количество и стоимость товара, реализованного за конкретный день.
+                <i className="fas fa-angle-down"></i>
+            </button>
+            <div className="panel" style={{display: activeIndexes.includes(15) ? "block" : "none"}}>
+                <p style={{marginBottom: "20px"}}>Параметры:</p>
+                <TopTenItemsQuery/>
             </div>
 
             <button

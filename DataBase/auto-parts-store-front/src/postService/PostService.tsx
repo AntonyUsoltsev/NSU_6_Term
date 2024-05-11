@@ -24,6 +24,15 @@ export default class PostService {
         }
     }
 
+    static async getCategories() {
+        try {
+            const value = await axios.get("http://localhost:8080/AutoPartsStore/api/supplierType/all");
+            console.log(value)
+            return value;
+        } catch (error) {
+            this.errorHandler(error);
+        }
+    }
 
     static async getCashReport(startDate: any, endDate: any) {
         try {

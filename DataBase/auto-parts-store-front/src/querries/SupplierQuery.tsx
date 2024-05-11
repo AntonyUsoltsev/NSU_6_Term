@@ -1,11 +1,21 @@
-import React, {useState} from "react";
-import {Form, Input, Button, Table} from "antd";
+import React, {useState, useEffect} from "react";
+import {Form, Button, Table, Select} from "antd";
 import PostService from "../postService/PostService";
+
+const {Option} = Select;
 
 const SupplierQuery = () => {
     const [form] = Form.useForm();
     const [activeQuery, setActiveQuery] = useState<boolean>(false);
     const [supplierData, setSupplierData] = useState<{ suppliers: any[], count: number }>({suppliers: [], count: 0});
+    const [categories, setCategories] = useState<any[]>([]);
+
+    useEffect(() => {
+        // Получение списка категорий при монтировании компонента
+        PostService.getCategories().then((response: any) => {
+            setCategories(response.data);
+        });
+    }, []);
 
     const handleSubmit = (values: any) => {
         setActiveQuery(true);
@@ -28,11 +38,6 @@ const SupplierQuery = () => {
             key: "documents",
         },
         {
-            title: "Тип",
-            dataIndex: "typeName",
-            key: "typeName",
-        },
-        {
             title: "Гарантия",
             dataIndex: "garanty",
             key: "garanty",
@@ -45,9 +50,13 @@ const SupplierQuery = () => {
             <Form name="getSuppliers" onFinish={handleSubmit} form={form}>
                 <Form.Item
                     name="category"
-                    rules={[{required: true, message: "Введите категорию"}]}
+                    rules={[{required: true, message: "Выберите категорию"}]}
                 >
-                    <Input placeholder="Введите категорию"/>
+                    <Select placeholder="Выберите категорию">
+                        {categories.map((category, index) => (
+                            <Option key={index} value={category.typeId}>{category.typeName}</Option>
+                        ))}
+                    </Select>
                 </Form.Item>
 
                 <Form.Item>

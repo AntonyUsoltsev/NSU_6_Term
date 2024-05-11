@@ -48,13 +48,13 @@ const SupplierByDeliveryQuery = () => {
                     name="startDate"
                     rules={[{required: true, message: "Введите дату начала"}]}
                 >
-                    <Input placeholder="Введите дату начала"/>
+                    <Input placeholder="Введите дату начала в формате YYYY-MM-DD hh:mm:ss"/>
                 </Form.Item>
                 <Form.Item
                     name="endDate"
                     rules={[{required: true, message: "Введите дату конца"}]}
                 >
-                    <Input placeholder="Введите дату конца"/>
+                    <Input placeholder="Введите дату конца в формате YYYY-MM-DD hh:mm:ss"/>
                 </Form.Item>
                 <Form.Item
                     name="amount"
