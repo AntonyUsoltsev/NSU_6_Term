@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from sklearn.metrics import precision_score
 from torch.utils.data import DataLoader, Subset
 from torchvision import datasets
 from torchvision.transforms import ToTensor
@@ -16,13 +17,14 @@ def load_datasets():
     test_data = datasets.FashionMNIST(root="data", train=False, download=True, transform=ToTensor(),
                                       target_transform=None)
 
-    train_data_crop = Subset(train_data, range(5000))
-    test_data_crop = Subset(test_data, range(2000))
+    train_data_crop = Subset(train_data, range(3000))
+    test_data_crop = Subset(test_data, range(500))
 
     class_names = train_data.classes
     class_to_idx = train_data.class_to_idx
     print(class_names, class_to_idx)
     image, label = train_data[0]
+    img_size = image.squeeze().size()[0]
     print(image.squeeze().size())
 
     torch.manual_seed(20)
@@ -37,21 +39,21 @@ def load_datasets():
         plt.axis(False)
     plt.show()
 
-    train_loader = DataLoader(dataset=train_data_crop, batch_size=32, shuffle=True)
-    test_loader = DataLoader(dataset=test_data_crop, batch_size=32, shuffle=False)
-    return train_loader, test_loader
+    train_loader = DataLoader(dataset=train_data_crop, batch_size=64, shuffle=True)
+    test_loader = DataLoader(dataset=test_data_crop, batch_size=64, shuffle=False)
+    return train_loader, test_loader, img_size
 
 
-def fit(train_loader, test_loader, conv_block):
+def fit(train_loader, test_loader, img_size, conv_block):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    model = CNN(conv_block, num_classes=10)
+    model = CNN(conv_block, num_classes=10, img_size=img_size)
     model.to(device)
 
     loss_func = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-    num_epochs = 10
+    num_epochs = 15
 
     for epoch in range(num_epochs):
         model.train()
@@ -74,6 +76,8 @@ def fit(train_loader, test_loader, conv_block):
     model.eval()
     correct = 0
     total = 0
+    predicted_labels = []
+    true_labels = []
     with torch.no_grad():
         for images, labels in test_loader:
             images, labels = images.to(device), labels.to(device)
@@ -81,18 +85,23 @@ def fit(train_loader, test_loader, conv_block):
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
+            predicted_labels.extend(predicted.cpu().numpy())
+            true_labels.extend(labels.cpu().numpy())
+
+    precision = precision_score(true_labels, predicted_labels, average='macro')
+    print(f'Precision of the network on the test images: {precision:.2f}')
 
     accuracy = 100 * correct / total
     print(f'Accuracy of the network on the test images: {accuracy:.2f}%')
 
 
 def main():
-    train_loader, test_loader = load_datasets()
+    train_loader, test_loader, img_size = load_datasets()
 
-    print("Start with ConvBlockA")
-    fit(train_loader, test_loader, ConvBlockA)
+    # print("Start with ConvBlockA")
+    # fit(train_loader, test_loader, img_size,ConvBlockA)
     print("Start with ConvBlockB")
-    fit(train_loader, test_loader, ConvBlockB)
+    fit(train_loader, test_loader, img_size, ConvBlockB)
 
 
 main()
