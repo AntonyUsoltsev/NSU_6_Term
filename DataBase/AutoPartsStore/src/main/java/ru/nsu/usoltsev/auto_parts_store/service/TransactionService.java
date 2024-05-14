@@ -2,8 +2,10 @@ package ru.nsu.usoltsev.auto_parts_store.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.nsu.usoltsev.auto_parts_store.model.Params;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.CashierDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.CustomerDto;
+import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.AverageSellDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.CashReportDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.SellingSpeedDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.TransactionInfoDto;
@@ -12,6 +14,7 @@ import ru.nsu.usoltsev.auto_parts_store.repository.TransactionRepository;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,5 +76,25 @@ public class TransactionService {
             );
         }
         return report;
+    }
+
+    public List<AverageSellDto> getAverageSell() {
+
+
+        LocalDate currentDate = LocalDate.now();
+        LocalDate foundingDate = Params.storeFoundingDate.toLocalDateTime().toLocalDate();
+
+        Period period = Period.between(foundingDate, currentDate);
+        int months = period.getYears() * 12 + period.getMonths();
+        System.out.println(months);
+        return transactionRepository.findAverageSell()
+                .stream()
+                .map(row -> new AverageSellDto(
+                        (String) row[0],
+                        (Long) row[1],
+                        (Double.valueOf((Long) row[1]) / months)))
+                .toList();
+
+
     }
 }

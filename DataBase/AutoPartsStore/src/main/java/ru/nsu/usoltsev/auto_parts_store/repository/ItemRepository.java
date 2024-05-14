@@ -63,4 +63,9 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "LEFT JOIN Supplier s on d.supplierId = s.supplierId " +
             "WHERE i.name = :name ")
     List<Object[]> getSupplierItemInfo(@Param("name")  String name);
+
+
+    @Query("SELECT count (distinct i.cellNumber) " +
+            "FROM Item i " )
+    Integer findStoreCapacity();
 }

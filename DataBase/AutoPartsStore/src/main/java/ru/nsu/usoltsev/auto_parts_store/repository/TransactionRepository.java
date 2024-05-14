@@ -3,6 +3,7 @@ package ru.nsu.usoltsev.auto_parts_store.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.CashReportDto;
 import ru.nsu.usoltsev.auto_parts_store.model.entity.Transaction;
 
 import java.sql.Timestamp;
@@ -50,4 +51,12 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     List<Object[]> findTransactionInfo(@Param("fromDate") Timestamp fromDate,
                                        @Param("toDate")Timestamp toDate);
 
+    @Query("SELECT ic.categoryName, sum(ol.amount) " +
+            "FROM Transaction t " +
+            "LEFT JOIN Orders  o on t.orderId = o.orderId " +
+            "LEFT JOIN OrderList ol on o.orderId = ol.orderId " +
+            "LEFT JOIN Item i on ol.itemId = i.itemId " +
+            "LEFT JOIN ItemCategory ic on i.categoryId = ic.categoryId " +
+            "GROUP BY ic.categoryName")
+    List<Object[]> findAverageSell();
 }

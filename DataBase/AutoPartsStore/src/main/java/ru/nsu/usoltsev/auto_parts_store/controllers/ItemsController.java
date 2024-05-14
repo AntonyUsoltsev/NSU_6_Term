@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.nsu.usoltsev.auto_parts_store.model.Params;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.ItemDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.*;
 import ru.nsu.usoltsev.auto_parts_store.service.ItemService;
@@ -65,6 +66,11 @@ public class ItemsController {
         return ResponseEntity.ok(items);
     }
 
+    @GetMapping("/storeCapacity")
+    public ResponseEntity<Integer> getStoreCapacity() {
+        Integer capacity = itemsRepository.getStoreCapacity();
+        return ResponseEntity.ok(Params.storeCapacity - capacity);
+    }
 
 
     @PostMapping()

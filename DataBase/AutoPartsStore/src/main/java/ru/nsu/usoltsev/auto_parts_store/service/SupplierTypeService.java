@@ -13,9 +13,21 @@ public class SupplierTypeService {
     @Autowired
     private SupplierTypeRepository supplierTypeRepository;
 
-    public List<SupplierTypeDto> getTransactionTypes(){
+    public List<SupplierTypeDto> getSupplierTypes() {
         return supplierTypeRepository.findAll().stream()
                 .map(SupplierTypeMapper.INSTANCE::toDto)
                 .toList();
+    }
+
+    public void deleteSupplierType(Long id) {
+        supplierTypeRepository.deleteById(id);
+    }
+
+    public void addSupplierType(SupplierTypeDto supplierTypeDto) {
+        supplierTypeRepository.addSupplierType(supplierTypeDto.getTypeName());
+    }
+
+    public void updateSupplierType(Long id, SupplierTypeDto supplierTypeDto) {
+        supplierTypeRepository.updateTypeNameById(id, supplierTypeDto.getTypeName());
     }
 }

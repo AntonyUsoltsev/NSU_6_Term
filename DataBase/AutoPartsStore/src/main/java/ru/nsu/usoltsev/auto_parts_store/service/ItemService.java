@@ -114,4 +114,8 @@ public class ItemService {
         }
         return ItemCatalogDtos;
     }
+
+    public Integer getStoreCapacity() {
+        return itemRepository.findStoreCapacity();
+    }
 }
