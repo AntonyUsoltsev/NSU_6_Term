@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {Form, Button, Table, Select} from "antd";
-import PostService from "../postService/PostService";
+import PostService from "../../postService/PostService";
 
 const {Option} = Select;
 
@@ -12,7 +12,7 @@ const SupplierQuery = () => {
 
     useEffect(() => {
         // Получение списка категорий при монтировании компонента
-        PostService.getCategories().then((response: any) => {
+        PostService.getSupplierTypes().then((response: any) => {
             setCategories(response.data);
         });
     }, []);

@@ -4,7 +4,8 @@ import {BrowserRouter, BrowserRouter as Router, Route, Switch} from 'react-route
 import catalogPage from "./catalog/CatalogPage";
 import Header from "./header/Header";
 import contactPage from "./contacts/ContactPage";
-import informationPage from "./information/informationPage";
+import informationPage from "./information/InformationPage";
+import editPage from "./editing/EditPage";
 
 class App extends React.Component {
      render() {
@@ -12,13 +13,11 @@ class App extends React.Component {
             <div className="wrapper">
                 <Header></Header>
                 <BrowserRouter>
-                    {/*<AuthButtons/>*/}
-                    {/*<MainMenu/>*/}
                     <Switch>
-                        {/*<Route path="/student_compass/:university/:course/:subject" component={BookListPage}/>*/}
                         <Route path="/catalog" component={catalogPage}/>
                         <Route path="/contacts" component={contactPage}/>
                         <Route path="/info" component={informationPage}/>
+                        <Route path="/editing" component={editPage}/>
                     </Switch>
                 </BrowserRouter>
             </div>

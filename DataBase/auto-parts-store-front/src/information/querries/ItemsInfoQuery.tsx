@@ -1,24 +1,22 @@
 import React, {useState} from "react";
-import {Form, Input, Button, Table} from "antd";
-import PostService from "../postService/PostService";
+import {Form, Button, Table} from "antd";
+import PostService from "../../postService/PostService";
 
-const RealisedItemsByDayQuery = () => {
+const ItemsInfoQuery = () => {
     const [form] = Form.useForm();
     const [activeQuery, setActiveQuery] = useState<boolean>(false);
-    const [itemsData, setItemData] = useState<[]>([]);
+    const [itemsData, setItemsData] = useState<any[]>([]);
 
-    const handleSubmit = (values: any) => {
+    const handleSubmit = () => {
         setActiveQuery(true);
-        const {day} = values;
-        // Получение данных
-        PostService.getRealisedItems(day).then((response: any) => {
-            setItemData(response.data);
+        PostService.getItemsInfo().then((response: any) => {
+            setItemsData(response.data);
         });
     };
 
     const columns = [
         {
-            title: "Название детали",
+            title: "Наименование",
             dataIndex: "name",
             key: "name",
         },
@@ -28,22 +26,15 @@ const RealisedItemsByDayQuery = () => {
             key: "amount",
         },
         {
-            title: "Цена",
-            dataIndex: "price",
-            key: "price",
+            title: "Номер ячейки",
+            dataIndex: "cellNumber",
+            key: "cellNumber",
         }
     ];
 
     return (
         <div>
             <Form name="getSuppliers" onFinish={handleSubmit} form={form}>
-                <Form.Item
-                    name="day"
-                    rules={[{required: true, message: "Введите день "}]}
-                >
-                    <Input placeholder="Введите день в формате YYYY-MM-DD"/>
-                </Form.Item>
-
                 <Form.Item>
                     <Button type="primary" htmlType="submit">
                         Получить список деталей
@@ -52,10 +43,12 @@ const RealisedItemsByDayQuery = () => {
             </Form>
             <div style={{display: activeQuery ? "block" : "none"}}>
                 <h2 style={{marginBottom: "15px"}}>Детали</h2>
-                <Table columns={columns} dataSource={itemsData}/>
+                <Table columns={columns}
+                       dataSource={itemsData}
+                       pagination={{pageSize: 20}}/>
             </div>
         </div>
     );
 };
 
-export default RealisedItemsByDayQuery;
+export default ItemsInfoQuery;

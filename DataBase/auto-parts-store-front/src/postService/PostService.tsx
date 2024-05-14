@@ -13,10 +13,10 @@ export default class PostService {
         }
     }
 
-    static async getCatalog(tableId: any) {
-        console.log("tableId" + tableId)
+    static async getRequest(url: any) {
+        console.log(url)
         try {
-            const value = await axios.get("http://localhost:8080/AutoPartsStore/api/items/catalog");
+            const value = await axios.get(url);
             console.log(value)
             return value;
         } catch (error) {
@@ -24,164 +24,71 @@ export default class PostService {
         }
     }
 
-    static async getCategories() {
-        try {
-            const value = await axios.get("http://localhost:8080/AutoPartsStore/api/supplierType/all");
-            console.log(value)
-            return value;
-        } catch (error) {
-            this.errorHandler(error);
-        }
+    static async getCatalog() {
+        return this.getRequest("http://localhost:8080/AutoPartsStore/api/items/catalog");
     }
 
-    static async getCashReport(startDate: any, endDate: any) {
-        try {
-            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/transactions/cashReport?from=${startDate}&to=${endDate}`);
-            console.log(value)
-            return value;
-        } catch (error) {
-            this.errorHandler(error);
-        }
+    static async getCashReport(startDate: string, endDate: string) {
+        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/transactions/cashReport?from=${startDate}&to=${endDate}`);
     }
 
-    static async getDefectItems(startDate: any, endDate: any) {
-        try {
-            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/items/defect?from=${startDate}&to=${endDate}`);
-            console.log(value)
-            return value;
-        } catch (error) {
-            this.errorHandler(error);
-        }
+    static async getDefectItems(startDate: string, endDate: string) {
+        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/items/defect?from=${startDate}&to=${endDate}`);
     }
 
-    static async getSuppliersByType(category: any) {
-        try {
-            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/suppliers?type=${category}`);
-            console.log(value)
-            return value;
-        } catch (error) {
-            this.errorHandler(error);
-        }
+    static async getSuppliersByType(category: string) {
+        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/suppliers?type=${category}`);
     }
 
-    static async getSuppliersByItemType(category: any) {
-        try {
-            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/suppliers/itemCategory?category=${category}`);
-            console.log(value)
-            return value;
-        } catch (error) {
-            this.errorHandler(error);
-        }
+    static async getSuppliersByItemType(category: string) {
+        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/suppliers/itemCategory?category=${category}`);
     }
 
-    static async getSuppliersByDelivery(startDate: any, endDate: any, amount: any, itemName: any) {
-        try {
-            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/suppliers/delivery?from=${startDate}&to=${endDate}&amount=${amount}&item=${itemName}`);
-            console.log(value)
-            return value;
-        } catch (error) {
-            this.errorHandler(error);
-        }
+    static async getSuppliersByDelivery(startDate: string, endDate: string, amount: string, itemName: string) {
+        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/suppliers/delivery?from=${startDate}&to=${endDate}&amount=${amount}&item=${itemName}`);
     }
-
 
     static async getItemsDeliveryPriceInfo() {
-        try {
-            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/items/deliveryPrice`);
-            console.log(value)
-            return value;
-        } catch (error) {
-            this.errorHandler(error);
-        }
+        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/items/deliveryPrice`);
     }
 
-    static async getCustomerByItem(startDate: any, endDate: any, itemName: any) {
-        try {
-            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/customers/byItem?from=${startDate}&to=${endDate}&item=${itemName}`);
-            console.log(value)
-            return value;
-        } catch (error) {
-            this.errorHandler(error);
-        }
+    static async getCustomerByItem(startDate: string, endDate: string, itemName: string) {
+        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/customers/byItem?from=${startDate}&to=${endDate}&item=${itemName}`);
     }
 
-    static async getCustomerByItemWithAmount(startDate: any, endDate: any, amount: any, itemName: any) {
-        try {
-            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/customers/byItemWithAmount?from=${startDate}&to=${endDate}&amount=${amount}&item=${itemName}`);
-            console.log(value)
-            return value;
-        } catch (error) {
-            this.errorHandler(error);
-        }
+    static async getCustomerByItemWithAmount(startDate: string, endDate: string, amount: string, itemName: string) {
+        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/customers/byItemWithAmount?from=${startDate}&to=${endDate}&amount=${amount}&item=${itemName}`);
     }
 
     static async getItemsInfo() {
-        try {
-            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/items/info`);
-            console.log(value)
-            return value;
-        } catch (error) {
-            this.errorHandler(error);
-        }
+        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/items/info`);
     }
 
     static async getItemsTopTen() {
-        try {
-            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/items/top`);
-            console.log(value)
-            return value;
-        } catch (error) {
-            this.errorHandler(error);
-        }
+        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/items/top`);
     }
 
-    static async getRealisedItems(day: any) {
-        try {
-            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/transactions/realised?date=${day}`);
-            console.log(value)
-            return value;
-        } catch (error) {
-            this.errorHandler(error);
-        }
+    static async getRealisedItems(day: string) {
+        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/transactions/realised?date=${day}`);
     }
 
     static async getSellingSpeed() {
-        try {
-            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/transactions/sellSpeed`);
-            console.log(value)
-            return value;
-        } catch (error) {
-            this.errorHandler(error);
-        }
+        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/transactions/sellSpeed`);
     }
 
     static async getInventoryList() {
-        try {
-            const value = await axios.get(` http://localhost:8080/AutoPartsStore/api/items/all`);
-            console.log(value)
-            return value;
-        } catch (error) {
-            this.errorHandler(error);
-        }
+        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/items/all`);
     }
 
     static async getStoreCapacity() {
-        try {
-            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/items/storeCapacity`);
-            console.log(value)
-            return value;
-        } catch (error) {
-            this.errorHandler(error);
-        }
+        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/items/storeCapacity`);
     }
 
     static async getAverageSell() {
-        try {
-            const value = await axios.get(`http://localhost:8080/AutoPartsStore/api/transactions/averageSell`);
-            console.log(value)
-            return value;
-        } catch (error) {
-            this.errorHandler(error);
-        }
+        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/transactions/averageSell`);
+    }
+
+    static async getSupplierTypes() {
+        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/supplierType/all`);
     }
 }

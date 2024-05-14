@@ -1,47 +1,45 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Table } from "antd";
-import PostService from "../postService/PostService";
+import PostService from "../../postService/PostService";
 
-const DefectItemsQuery = () => {
+const CustomerByItemQuery = () => {
     const [form] = Form.useForm();
     const [activeQuery, setActiveQuery] = useState<boolean>(false);
-    const [defectItems, setDefectItems] = useState([]);
+    const [customerData, setCustomerData] = useState<[]>([]);
 
     const handleSubmit = (values: any) => {
         setActiveQuery(true);
-        const { startDate, endDate } = values;
+        const { startDate, endDate, itemName } = values;
+
         // Получение данных
-        PostService.getDefectItems(startDate, endDate).then((response: any) => {
-            setDefectItems(response.data);
-        });
+        PostService.getCustomerByItem(startDate, endDate, itemName).then(
+            (response: any) => {
+                setCustomerData(response.data);
+            }
+        );
     };
 
     const columns = [
         {
-            title: "Наименование товара",
-            dataIndex: "itemName",
-            key: "itemName",
+            title: "Имя",
+            dataIndex: "name",
+            key: "name",
         },
         {
-            title: "Количество дефектных",
-            dataIndex: "defectAmount",
-            key: "defectAmount",
+            title: "Фамилия",
+            dataIndex: "secondName",
+            key: "secondName",
         },
         {
-            title: "Дата поставки",
-            dataIndex: "deliveryDate",
-            key: "deliveryDate",
+            title: "Email",
+            dataIndex: "email",
+            key: "email",
         },
-        {
-            title: "Поставщик",
-            dataIndex: "supplierName",
-            key: "supplierName",
-        }
     ];
 
     return (
         <div>
-            <Form name="getCashReport" onFinish={handleSubmit} form={form}>
+            <Form name="getSuppliers" onFinish={handleSubmit} form={form}>
                 <Form.Item
                     name="startDate"
                     rules={[{ required: true, message: "Введите дату начала" }]}
@@ -54,19 +52,24 @@ const DefectItemsQuery = () => {
                 >
                     <Input placeholder="Введите дату конца в формате YYYY-MM-DD hh:mm:ss" />
                 </Form.Item>
-
+                <Form.Item
+                    name="itemName"
+                    rules={[{ required: true, message: "Введите название детали" }]}
+                >
+                    <Input placeholder="Введите название детали " />
+                </Form.Item>
                 <Form.Item>
                     <Button type="primary" htmlType="submit">
-                        Получить список бракованных деталей
+                        Получить список покупателей
                     </Button>
                 </Form.Item>
             </Form>
             <div style={{ display: activeQuery ? "block" : "none" }}>
-                <h2 style={{marginBottom: "15px"}}>Бракованные детали</h2>
-                <Table columns={columns} dataSource={defectItems} />
+                <h2 style={{ marginBottom: "15px" }}>Поставщики</h2>
+                <Table columns={columns} dataSource={customerData} />
             </div>
         </div>
     );
 };
 
-export default DefectItemsQuery;
+export default CustomerByItemQuery;

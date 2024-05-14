@@ -1,40 +1,44 @@
 import React, {useState} from "react";
 import {Form, Input, Button, Table} from "antd";
-import PostService from "../postService/PostService";
+import PostService from "../../postService/PostService";
 
-const CustomerByItemWithAmountQuery = () => {
+const SupplierByDeliveryQuery = () => {
     const [form] = Form.useForm();
     const [activeQuery, setActiveQuery] = useState<boolean>(false);
-    const [customerData, setCustomerData] = useState<[]>([]);
+    const [supplierData, setSupplierData] = useState<[]>([]);
 
     const handleSubmit = (values: any) => {
         setActiveQuery(true);
         const {startDate, endDate, amount, itemName} = values;
 
         // Получение данных
-        PostService.getCustomerByItemWithAmount(startDate, endDate, amount, itemName).then(
-            (response: any) => {
-                setCustomerData(response.data);
-            }
-        );
+        PostService.getSuppliersByDelivery(startDate, endDate, amount, itemName).then((response: any) => {
+            setSupplierData(response.data);
+        });
     };
 
     const columns = [
         {
-            title: "Имя",
+            title: "Наименование поставщика",
             dataIndex: "name",
             key: "name",
         },
         {
-            title: "Фамилия",
-            dataIndex: "secondName",
-            key: "secondName",
+            title: "Документы",
+            dataIndex: "documents",
+            key: "documents",
         },
         {
-            title: "Email",
-            dataIndex: "email",
-            key: "email",
+            title: "Тип",
+            dataIndex: "typeName",
+            key: "typeName",
         },
+        {
+            title: "Гарантия",
+            dataIndex: "garanty",
+            key: "garanty",
+            render: (garanty: boolean) => (garanty ? "Есть" : "Нет"),
+        }
     ];
 
     return (
@@ -53,29 +57,30 @@ const CustomerByItemWithAmountQuery = () => {
                     <Input placeholder="Введите дату конца в формате YYYY-MM-DD hh:mm:ss"/>
                 </Form.Item>
                 <Form.Item
-                    name="itemName"
-                    rules={[{required: true, message: "Введите название детали"}]}
-                >
-                    <Input placeholder="Введите название детали "/>
-                </Form.Item>
-                <Form.Item
                     name="amount"
                     rules={[{required: true, message: "Введите количество"}]}
                 >
                     <Input placeholder="Введите количество"/>
                 </Form.Item>
+                <Form.Item
+                    name="itemName"
+                    rules={[{required: true, message: "Введите название детали"}]}
+                >
+                    <Input placeholder="Введите название детали "/>
+                </Form.Item>
+
                 <Form.Item>
                     <Button type="primary" htmlType="submit">
-                        Получить список покупателей
+                        Получить список поставщиков
                     </Button>
                 </Form.Item>
             </Form>
             <div style={{display: activeQuery ? "block" : "none"}}>
                 <h2 style={{marginBottom: "15px"}}>Поставщики</h2>
-                <Table columns={columns} dataSource={customerData}/>
+                <Table columns={columns} dataSource={supplierData}/>
             </div>
         </div>
     );
 };
 
-export default CustomerByItemWithAmountQuery;
+export default SupplierByDeliveryQuery;

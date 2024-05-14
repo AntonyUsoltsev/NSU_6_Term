@@ -1,15 +1,15 @@
 import React, {useState} from "react";
 import {Form, Button, Table} from "antd";
-import PostService from "../postService/PostService";
+import PostService from "../../postService/PostService";
 
-const ItemsInfoQuery = () => {
+const TopTenItemsQuery = () => {
     const [form] = Form.useForm();
     const [activeQuery, setActiveQuery] = useState<boolean>(false);
     const [itemsData, setItemsData] = useState<any[]>([]);
 
     const handleSubmit = () => {
         setActiveQuery(true);
-        PostService.getItemsInfo().then((response: any) => {
+        PostService.getItemsTopTen().then((response: any) => {
             setItemsData(response.data);
         });
     };
@@ -24,11 +24,6 @@ const ItemsInfoQuery = () => {
             title: "Количество",
             dataIndex: "amount",
             key: "amount",
-        },
-        {
-            title: "Номер ячейки",
-            dataIndex: "cellNumber",
-            key: "cellNumber",
         }
     ];
 
@@ -51,4 +46,4 @@ const ItemsInfoQuery = () => {
     );
 };
 
-export default ItemsInfoQuery;
+export default TopTenItemsQuery;

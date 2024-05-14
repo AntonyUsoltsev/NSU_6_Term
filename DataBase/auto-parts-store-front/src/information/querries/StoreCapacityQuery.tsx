@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Form, Button, Table} from "antd";
-import PostService from "../postService/PostService";
+import PostService from "../../postService/PostService";
 
 const StoreCapacityQuery = () => {
     const [form] = Form.useForm();

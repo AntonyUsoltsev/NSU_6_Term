@@ -11,7 +11,7 @@ const CatalogPage: React.FC = () => {
 
     useEffect(() => {
         // Загрузка списка университетов при монтировании компонента
-        PostService.getCatalog(1).then((response: any) => {
+        PostService.getCatalog().then((response: any) => {
             setCatalog(response.data);
             setLoading(false);
         });

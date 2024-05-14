@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import {Form, Button, Table} from "antd";
-import PostService from "../postService/PostService";
+import PostService from "../../postService/PostService";
 
-const AverageSellQuery = () => {
+const AverageSellQuery: React.FC  = () => {
     const [form] = Form.useForm();
     const [activeQuery, setActiveQuery] = useState<boolean>(false);
     const [itemsData, setItemData] = useState<[]>([]);

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Button, Table } from "antd";
-import PostService from "../postService/PostService";
+import PostService from "../../postService/PostService";
 
 const InventoryListQuery = () => {
     const [form] = Form.useForm();
