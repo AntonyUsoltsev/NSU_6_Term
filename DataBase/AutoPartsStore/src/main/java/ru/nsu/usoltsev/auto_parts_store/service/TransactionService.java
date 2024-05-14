@@ -70,8 +70,8 @@ public class TransactionService {
                     (Timestamp) row[1],
                     (String) row[2],
                     (Integer) row[3],
-                    new CashierDto((String) row[4], (String) row[5]),
-                    new CustomerDto((String) row[6], (String) row[7], (String) row[8]),
+                    new CashierDto((Long) row[4],(String) row[5], (String) row[6]),
+                    new CustomerDto((String) row[7], (String) row[8], (String) row[9]),
                     transactionOrderList)
             );
         }

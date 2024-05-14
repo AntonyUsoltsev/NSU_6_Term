@@ -9,25 +9,29 @@ import ru.nsu.usoltsev.auto_parts_store.repository.SupplierTypeRepository;
 import java.util.List;
 
 @Service
-public class SupplierTypeService {
+public class SupplierTypeService implements CrudService<SupplierTypeDto> {
     @Autowired
     private SupplierTypeRepository supplierTypeRepository;
 
-    public List<SupplierTypeDto> getSupplierTypes() {
+    @Override
+    public List<SupplierTypeDto> getAll() {
         return supplierTypeRepository.findAll().stream()
                 .map(SupplierTypeMapper.INSTANCE::toDto)
                 .toList();
     }
 
-    public void deleteSupplierType(Long id) {
+    @Override
+    public void delete(Long id) {
         supplierTypeRepository.deleteById(id);
     }
 
-    public void addSupplierType(SupplierTypeDto supplierTypeDto) {
+    @Override
+    public void add(SupplierTypeDto supplierTypeDto) {
         supplierTypeRepository.addSupplierType(supplierTypeDto.getTypeName());
     }
 
-    public void updateSupplierType(Long id, SupplierTypeDto supplierTypeDto) {
+    @Override
+    public void update(Long id, SupplierTypeDto supplierTypeDto) {
         supplierTypeRepository.updateTypeNameById(id, supplierTypeDto.getTypeName());
     }
 }
