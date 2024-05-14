@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Form, Button, Table, Input, Popconfirm, message } from "antd";
+import React, {useEffect, useState} from "react";
+import {Form, Button, Table, Input, Popconfirm, message} from "antd";
 import PostService from "../../postService/PostService";
 
 const SupplierTypeEdit: React.FC = () => {
@@ -20,11 +20,11 @@ const SupplierTypeEdit: React.FC = () => {
 
     const handleSave = async () => {
         try {
-            // if (editMode) {
-            //     await PostService.updateSupplierType(selectedSupplierTypeId, typeName);
-            // } else {
-            //     await PostService.addSupplierType(typeName);
-            // }
+            if (editMode) {
+                await PostService.updateSupplierType(typeName, selectedSupplierTypeId);
+            } else {
+                await PostService.addSupplierType(typeName);
+            }
             fetchSupplierTypes();
             setEditMode(false);
             setTypeName("");
@@ -36,8 +36,11 @@ const SupplierTypeEdit: React.FC = () => {
 
     const handleDelete = async (supplierTypeId: number) => {
         try {
-            // await PostService.deleteSupplierType(supplierTypeId);
-            fetchSupplierTypes();
+            PostService.deleteSupplierType(supplierTypeId).then((respone: any) => {
+                    fetchSupplierTypes()
+                }
+            );
+
         } catch (error) {
             message.error("Failed to delete the supplier type.");
         }
@@ -54,14 +57,18 @@ const SupplierTypeEdit: React.FC = () => {
             key: "actions",
             render: (text: any, record: any) => (
                 <span>
-                    <a onClick={() => { setEditMode(true); setTypeName(record.typeName); setSelectedSupplierTypeId(record.id); }}>Редактировать</a>
+                    <a onClick={() => {
+                        setEditMode(true);
+                        setTypeName(record.typeName);
+                        setSelectedSupplierTypeId(record.typeId);
+                    }}>Редактировать</a>
                     <Popconfirm
                         title="Вы уверены, что хотите удалить этот тип поставщика?"
-                        onConfirm={() => handleDelete(record.id)}
+                        onConfirm={() => handleDelete(record.typeId)}
                         okText="Да"
                         cancelText="Нет"
                     >
-                        <a style={{ marginLeft: 8 }}>Удалить</a>
+                        <a style={{marginLeft: 8}}>Удалить</a>
                     </Popconfirm>
                 </span>
             ),
@@ -70,10 +77,10 @@ const SupplierTypeEdit: React.FC = () => {
 
     return (
         <div>
-            <h2 style={{ marginBottom: "15px" }}>Категории поставщиков</h2>
+            <h2 style={{marginBottom: "15px"}}>Категории поставщиков</h2>
             <Form layout="inline">
                 <Form.Item label="Тип поставщика">
-                    <Input value={typeName} onChange={(e) => setTypeName(e.target.value)} />
+                    <Input value={typeName} onChange={(e) => setTypeName(e.target.value)}/>
                 </Form.Item>
                 <Form.Item>
                     <Button type="primary" onClick={handleSave}>
@@ -81,7 +88,7 @@ const SupplierTypeEdit: React.FC = () => {
                     </Button>
                 </Form.Item>
             </Form>
-            <Table columns={columns} dataSource={supplierTypesData} />
+            <Table columns={columns} dataSource={supplierTypesData}/>
         </div>
     );
 };

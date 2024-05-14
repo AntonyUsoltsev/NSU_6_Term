@@ -24,6 +24,40 @@ export default class PostService {
         }
     }
 
+    static async deleteRequest(url: any) {
+        console.log(url)
+        try {
+            const value = await axios.delete(url);
+            console.log(value)
+            return value;
+        } catch (error) {
+            this.errorHandler(error);
+        }
+    }
+
+    static async addRequest(url: any, body: {}) {
+        console.log(url)
+        try {
+            const value = await axios.post(url, body)
+            console.log(value)
+            return value;
+        } catch (error) {
+            this.errorHandler(error);
+        }
+    }
+
+    static async updateRequest(url: any, body: {}) {
+        console.log(url)
+        try {
+            const value = await axios.patch(url, body)
+            console.log(value)
+            return value;
+        } catch (error) {
+            this.errorHandler(error);
+        }
+    }
+
+
     static async getCatalog() {
         return this.getRequest("http://localhost:8080/AutoPartsStore/api/items/catalog");
     }
@@ -91,4 +125,25 @@ export default class PostService {
     static async getSupplierTypes() {
         return this.getRequest(`http://localhost:8080/AutoPartsStore/api/supplierType/all`);
     }
+
+    static async deleteSupplierType(id: any) {
+        return this.deleteRequest(`http://localhost:8080/AutoPartsStore/api/supplierType/${id}`);
+    }
+
+    static async addSupplierType(typeName:string) {
+        const body = {
+            typeName: typeName,
+        }
+        return this.addRequest(`http://localhost:8080/AutoPartsStore/api/supplierType`, body)
+
+    }
+    static async updateSupplierType(typeName:string, typeId:any) {
+        const body = {
+            typeId: typeId,
+            typeName: typeName,
+        }
+        return this.updateRequest(`http://localhost:8080/AutoPartsStore/api/supplierType/${typeId}`, body)
+    }
+
+
 }
