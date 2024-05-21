@@ -41,7 +41,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             "WHERE t.transactionId = :transactionId")
     List<Object[]> findTransactionOrderList(@Param("transactionId") Long transactionId);
 
-    @Query("SELECT t.transactionId, t.transactionDate, tt.typeName, o.fullPrice, c.cashierId, c.name, c.secondName, cus.name, cus.secondName, cus.email " +
+    @Query("SELECT t.transactionId, t.transactionDate, tt.typeName, o.fullPrice, c.cashierId, c.name, c.secondName,cus.customerId, cus.name, cus.secondName, cus.email " +
             "FROM Transaction t " +
             "LEFT JOIN Cashier c on t.cashierId = c.cashierId " +
             "LEFT JOIN TransactionType tt on  t.typeId = tt.typeId " +

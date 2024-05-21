@@ -1,6 +1,9 @@
 import axios from "axios";
 
 export default class PostService {
+
+    static requestPrefix = `http://localhost:8080/AutoPartsStore/api/`
+
     static errorHandler(error: any) {
         if (error.response) {
             console.error(error.response.data);
@@ -14,9 +17,10 @@ export default class PostService {
     }
 
     static async getRequest(url: any) {
-        console.log(url)
+        console.log("Get request to: " + url)
         try {
-            const value = await axios.get(url);
+            const value = await axios.get(this.requestPrefix + url);
+            console.log("Get answer from " + url + " : ")
             console.log(value)
             return value;
         } catch (error) {
@@ -25,125 +29,108 @@ export default class PostService {
     }
 
     static async deleteRequest(url: any) {
-        console.log(url)
-        try {
-            const value = await axios.delete(url);
-            console.log(value)
-            return value;
-        } catch (error) {
-            this.errorHandler(error);
-        }
+        console.log("Delete request to: " + url)
+        // try {
+        //     const value = await axios.delete(this.requestPrefix + url);
+        //     console.log("Del answer from " + url + " : " + value)
+        //     return value;
+        // } catch (error) {
+        //     this.errorHandler(error);
+        //     throw error;
+        // }
     }
 
     static async addRequest(url: any, body: {}) {
-        console.log(url)
+        console.log("Add request to: " + url + "body: ");
+        console.log(body);
         try {
-            const value = await axios.post(url, body)
+            const value = await axios.post(this.requestPrefix + url, body)
+            console.log("Add answer from " + url + " : ")
             console.log(value)
             return value;
         } catch (error) {
             this.errorHandler(error);
+            throw error;
         }
     }
 
     static async updateRequest(url: any, body: {}) {
-        console.log(url)
+        console.log("Update request to: " + url + " body: ");
+        console.log(body);
         try {
-            const value = await axios.patch(url, body)
+            const value = await axios.patch(this.requestPrefix + url, body)
+            console.log("Update answer from " + url + " : ")
             console.log(value)
             return value;
         } catch (error) {
             this.errorHandler(error);
+            throw error;
         }
     }
 
 
     static async getCatalog() {
-        return this.getRequest("http://localhost:8080/AutoPartsStore/api/items/catalog");
+        return this.getRequest("items/catalog");
     }
 
     static async getCashReport(startDate: string, endDate: string) {
-        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/transactions/cashReport?from=${startDate}&to=${endDate}`);
+        return this.getRequest(`transactions/cashReport?from=${startDate}&to=${endDate}`);
     }
 
     static async getDefectItems(startDate: string, endDate: string) {
-        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/items/defect?from=${startDate}&to=${endDate}`);
+        return this.getRequest(`items/defect?from=${startDate}&to=${endDate}`);
     }
 
     static async getSuppliersByType(category: string) {
-        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/suppliers?type=${category}`);
+        return this.getRequest(`suppliers?type=${category}`);
     }
 
     static async getSuppliersByItemType(category: string) {
-        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/suppliers/itemCategory?category=${category}`);
+        return this.getRequest(`suppliers/itemCategory?category=${category}`);
     }
 
     static async getSuppliersByDelivery(startDate: string, endDate: string, amount: string, itemName: string) {
-        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/suppliers/delivery?from=${startDate}&to=${endDate}&amount=${amount}&item=${itemName}`);
+        return this.getRequest(`suppliers/delivery?from=${startDate}&to=${endDate}&amount=${amount}&item=${itemName}`);
     }
 
     static async getItemsDeliveryPriceInfo() {
-        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/items/deliveryPrice`);
+        return this.getRequest(`items/deliveryPrice`);
     }
 
     static async getCustomerByItem(startDate: string, endDate: string, itemName: string) {
-        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/customers/byItem?from=${startDate}&to=${endDate}&item=${itemName}`);
+        return this.getRequest(`customers/byItem?from=${startDate}&to=${endDate}&item=${itemName}`);
     }
 
     static async getCustomerByItemWithAmount(startDate: string, endDate: string, amount: string, itemName: string) {
-        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/customers/byItemWithAmount?from=${startDate}&to=${endDate}&amount=${amount}&item=${itemName}`);
+        return this.getRequest(`customers/byItemWithAmount?from=${startDate}&to=${endDate}&amount=${amount}&item=${itemName}`);
     }
 
     static async getItemsInfo() {
-        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/items/info`);
+        return this.getRequest(`items/info`);
     }
 
     static async getItemsTopTen() {
-        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/items/top`);
+        return this.getRequest(`items/top`);
     }
 
     static async getRealisedItems(day: string) {
-        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/transactions/realised?date=${day}`);
+        return this.getRequest(`transactions/realised?date=${day}`);
     }
 
     static async getSellingSpeed() {
-        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/transactions/sellSpeed`);
+        return this.getRequest(`transactions/sellSpeed`);
     }
 
     static async getInventoryList() {
-        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/items/all`);
+        return this.getRequest(`items/all`);
     }
 
     static async getStoreCapacity() {
-        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/items/storeCapacity`);
+        return this.getRequest(`items/storeCapacity`);
     }
 
     static async getAverageSell() {
-        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/transactions/averageSell`);
+        return this.getRequest(`transactions/averageSell`);
     }
-
-    static async getSupplierTypes() {
-        return this.getRequest(`http://localhost:8080/AutoPartsStore/api/supplierType/all`);
-    }
-
-    static async deleteSupplierType(id: any) {
-        return this.deleteRequest(`http://localhost:8080/AutoPartsStore/api/supplierType/${id}`);
-    }
-
-    static async addSupplierType(typeName:string) {
-        const body = {
-            typeName: typeName,
-        }
-        return this.addRequest(`http://localhost:8080/AutoPartsStore/api/supplierType`, body)
-
-    }
-    static async updateSupplierType(typeName:string, typeId:any) {
-        const body = {
-            typeId: typeId,
-            typeName: typeName,
-        }
-        return this.updateRequest(`http://localhost:8080/AutoPartsStore/api/supplierType/${typeId}`, body)
-    }
-
 
 }

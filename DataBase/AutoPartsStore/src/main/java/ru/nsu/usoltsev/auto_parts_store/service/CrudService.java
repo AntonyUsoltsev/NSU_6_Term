@@ -1,5 +1,7 @@
 package ru.nsu.usoltsev.auto_parts_store.service;
 
+import jakarta.transaction.Transactional;
+
 import java.util.List;
 
 public interface CrudService<D> {
@@ -7,7 +9,7 @@ public interface CrudService<D> {
 
     void delete(Long id);
 
-    void add(D dto);
+    D add(D dto);
 
     void update(Long id, D dto);
 }

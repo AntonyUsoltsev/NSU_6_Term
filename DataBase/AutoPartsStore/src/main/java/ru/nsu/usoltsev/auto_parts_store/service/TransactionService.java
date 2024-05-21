@@ -71,7 +71,7 @@ public class TransactionService {
                     (String) row[2],
                     (Integer) row[3],
                     new CashierDto((Long) row[4],(String) row[5], (String) row[6]),
-                    new CustomerDto((String) row[7], (String) row[8], (String) row[9]),
+                    new CustomerDto((Long) row[7],(String) row[8], (String) row[9], (String) row[10]),
                     transactionOrderList)
             );
         }

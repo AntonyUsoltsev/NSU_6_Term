@@ -1,6 +1,5 @@
 package ru.nsu.usoltsev.auto_parts_store.controllers;
 
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,20 +10,18 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@AllArgsConstructor
 @RequestMapping("api/customers")
-public class CustomerController {
+public class CustomerController extends CrudController<CustomerDto> {
+    private final CustomerService customerService;
 
-    private CustomerService customerService;
+    public CustomerController(CustomerService customerService) {
+        super(customerService);
+        this.customerService = customerService;
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<CustomerDto> getCustomer(@PathVariable String id) {
         return ResponseEntity.ok(customerService.getCustomerById(Long.valueOf(id)));
-    }
-
-    @GetMapping()
-    public ResponseEntity<List<CustomerDto>> getCustomers() {
-        return ResponseEntity.ok(customerService.getCustomers());
     }
 
     @GetMapping("/byItemWithAmount")
@@ -42,9 +39,4 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.getCustomerByItem(fromDate, toDate, 0, item));
     }
 
-
-    @PostMapping()
-    public ResponseEntity<CustomerDto> createCustomer(@RequestBody CustomerDto customerDto) {
-        return new ResponseEntity<>(customerService.saveCustomer(customerDto), HttpStatus.CREATED);
-    }
 }

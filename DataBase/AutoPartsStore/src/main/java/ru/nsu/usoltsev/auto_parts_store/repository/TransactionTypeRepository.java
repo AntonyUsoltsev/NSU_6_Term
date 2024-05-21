@@ -23,4 +23,5 @@ public interface TransactionTypeRepository extends JpaRepository<TransactionType
     @Query("UPDATE TransactionType t  SET t.typeName = :newTypeName WHERE t.typeId = :id")
     void updateTypeNameById(@Param("id") Long id, @Param("newTypeName") String newTypeName);
 
+    TransactionType findByTypeName(String typeName);
 }

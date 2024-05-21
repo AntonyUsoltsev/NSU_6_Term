@@ -27,9 +27,9 @@ public class ItemCategoryService implements CrudService<ItemCategoryDto> {
     }
 
     @Override
-    public void add(ItemCategoryDto dto) {
+    public ItemCategoryDto add(ItemCategoryDto dto) {
         itemCategoryRepository.addItemCategory(dto.getCategoryName());
-
+        return ItemCategoryMapper.INSTANCE.toDto(itemCategoryRepository.findByCategoryName(dto.getCategoryName()));
     }
 
     @Override

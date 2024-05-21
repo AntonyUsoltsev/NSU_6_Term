@@ -12,7 +12,7 @@ const SupplierQuery = () => {
 
     useEffect(() => {
         // Получение списка категорий при монтировании компонента
-        PostService.getSupplierTypes().then((response: any) => {
+        PostService.getRequest(`supplierType/all`).then((response: any) => {
             setCategories(response.data);
         });
     }, []);

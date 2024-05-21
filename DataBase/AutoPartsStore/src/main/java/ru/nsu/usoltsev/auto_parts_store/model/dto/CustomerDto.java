@@ -10,6 +10,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class CustomerDto {
 
+    private Long customerId;
+
     @NotBlank(message = "Name cannot be blank")
     @Pattern(regexp = "[a-zA-Zа-яА-Я]+", message = "Name can contain only letters")
     private String name;

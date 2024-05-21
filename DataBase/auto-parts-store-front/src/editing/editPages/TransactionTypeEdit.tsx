@@ -2,21 +2,21 @@ import React, {useEffect, useState} from "react";
 import {Form, Button, Table, Input, Popconfirm, message, Modal} from "antd";
 import PostService from "../../postService/PostService";
 
-const SupplierTypeEdit: React.FC = () => {
-    const [supplierTypesData, setSupplierTypesData] = useState([]);
-    const [isModalVisible, setIsModalVisible] = useState(false);
+const TransactionTypeEdit: React.FC = () => {
+    const [transactionTypesData, setTransactionTypesData] = useState([]);
     const [editMode, setEditMode] = useState(false);
     const [typeName, setTypeName] = useState("");
-    const [selectedSupplierTypeId, setSelectedSupplierTypeId] = useState(null);
+    const [selectedTransactionTypeId, setSelectedTransactionTypeId] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const [form] = Form.useForm();
 
     useEffect(() => {
-        fetchSupplierTypes();
+        fetchTransactionTypes();
     }, []);
 
-    const fetchSupplierTypes = () => {
-        PostService.getRequest(`supplierType/all`).then((response: any) => {
-            setSupplierTypesData(response.data);
+    const fetchTransactionTypes = () => {
+        PostService.getRequest(`transactionType/all`).then((response: any) => {
+            setTransactionTypesData(response.data);
         });
     };
 
@@ -26,38 +26,37 @@ const SupplierTypeEdit: React.FC = () => {
                 typeName: typeName,
             }
             if (editMode) {
-                await PostService.updateRequest(`supplierType/${selectedSupplierTypeId}`, body);
+                await PostService.updateRequest(`transactionType/${selectedTransactionTypeId}`, body);
             } else {
-                await PostService.addRequest(`supplierType`, body);
+                await PostService.addRequest(`transactionType`, body);
             }
-            fetchSupplierTypes();
+            fetchTransactionTypes();
             resetForm();
         } catch (error) {
-            message.error("Failed to save the supplier type.");
+            message.error("Failed to save the transaction type.");
         }
     };
 
-    const handleDelete = async (supplierTypeId: number) => {
+    const handleDelete = async (TransactionTypeId: number) => {
         try {
-            await PostService.deleteRequest(`supplierType/${supplierTypeId}`).then((response: any) => {
-                fetchSupplierTypes();
+            await PostService.deleteRequest(`transactionType/${TransactionTypeId}`).then((response: any) => {
+                fetchTransactionTypes();
             });
-
         } catch (error) {
-            message.error("Failed to delete the supplier type.");
+            message.error("Failed to delete the transaction type.");
         }
     };
 
     const resetForm = () => {
         setEditMode(false);
         setTypeName("");
-        setSelectedSupplierTypeId(null);
+        setSelectedTransactionTypeId(null);
         setIsModalVisible(false);
     };
 
     const columns = [
         {
-            title: "Тип поставщика",
+            title: "Тип транзакции",
             dataIndex: "typeName",
             key: "typeName",
         },
@@ -69,11 +68,11 @@ const SupplierTypeEdit: React.FC = () => {
                     <a onClick={() => {
                         setEditMode(true);
                         setTypeName(record.typeName);
-                        setSelectedSupplierTypeId(record.typeId);
+                        setSelectedTransactionTypeId(record.typeId);
                         setIsModalVisible(true);
                     }}>Редактировать</a>
                     <Popconfirm
-                        title="Вы уверены, что хотите удалить этот тип поставщика?"
+                        title="Вы уверены, что хотите удалить этот тип транзакции?"
                         onConfirm={() => handleDelete(record.typeId)}
                         okText="Да"
                         cancelText="Нет"
@@ -84,31 +83,32 @@ const SupplierTypeEdit: React.FC = () => {
             ),
         },
     ];
+
     const handleAdd = () => {
         setEditMode(false);
         setTypeName("");
-        setSelectedSupplierTypeId(null);
+        setSelectedTransactionTypeId(null);
         setIsModalVisible(true);
     };
 
     return (
         <div>
-            <h2 style={{marginBottom: "15px"}}>Категории поставщиков</h2>
-            <Button type="primary" onClick={handleAdd}>
+            <h2 style={{marginBottom: "15px"}}>Категории транзакций</h2>
+            <Button type="primary" onClick={handleAdd} style={{marginBottom: "15px"}}>
                 Добавить
             </Button>
-            <Table columns={columns} dataSource={supplierTypesData}/>
+            <Table columns={columns} dataSource={transactionTypesData}/>
             <Modal
-                title={editMode ? "Редактировать тип поставщика" : "Добавить тип поставщика"}
+                title={editMode ? "Редактировать тип транзакции" : "Добавить тип транзакции"}
                 visible={isModalVisible}
                 onOk={handleSave}
-                onCancel={resetForm}
+                onCancel={() => setIsModalVisible(false)}
                 okText={editMode ? "Сохранить" : "Добавить"}
                 cancelText="Отмена"
             >
                 <Form form={form} layout="vertical">
                     <Form.Item
-                        label="Тип поставщика"
+                        label="Тип транзакции"
                         rules={[{required: true, message: "Пожалуйста, введите тип"}]}
                     >
                         <Input value={typeName} onChange={(e) => setTypeName(e.target.value)}/>
@@ -119,4 +119,4 @@ const SupplierTypeEdit: React.FC = () => {
     );
 };
 
-export default SupplierTypeEdit;
+export default TransactionTypeEdit;

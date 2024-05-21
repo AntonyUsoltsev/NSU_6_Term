@@ -13,6 +13,7 @@ public interface SupplierTypeRepository extends JpaRepository<SupplierType, Long
     @Transactional
     @Query("DELETE FROM SupplierType s WHERE s.typeId = :id")
     void deleteById(@Param("id") Long id);
+
     @Modifying
     @Transactional
     @Query(value = "INSERT INTO supplier_type (type_id, type_name) VALUES (default, :supplierTypeName)", nativeQuery = true)
@@ -24,4 +25,5 @@ public interface SupplierTypeRepository extends JpaRepository<SupplierType, Long
     void updateTypeNameById(@Param("id") Long id, @Param("newTypeName") String newTypeName);
 
 
+    SupplierType findByTypeName(String typeName);
 }

@@ -1,7 +1,6 @@
 package ru.nsu.usoltsev.auto_parts_store.controllers;
 
 
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,24 +13,18 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("api/suppliers")
-@AllArgsConstructor
-public class SupplierController {
+public class SupplierController extends CrudController<SupplierDto> {
 
-    private SupplierService supplierService;
+    private final SupplierService supplierService;
+
+    public SupplierController(SupplierService supplierService) {
+        super(supplierService);
+        this.supplierService = supplierService;
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<SupplierDto> getSupplier(@PathVariable String id) {
         return ResponseEntity.ok(supplierService.getSupplierById(Long.valueOf(id)));
-    }
-
-    @GetMapping("/all")
-    public ResponseEntity<List<SupplierDto>> getSuppliers() {
-        return ResponseEntity.ok(supplierService.getSuppliers());
-    }
-
-    @PostMapping()
-    public ResponseEntity<SupplierDto> createSupplier(@RequestBody SupplierDto supplierDto) {
-        return new ResponseEntity<>(supplierService.saveSupplier(supplierDto), HttpStatus.CREATED);
     }
 
     @GetMapping()

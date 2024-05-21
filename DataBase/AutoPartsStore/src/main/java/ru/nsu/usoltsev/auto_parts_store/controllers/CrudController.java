@@ -1,6 +1,8 @@
 package ru.nsu.usoltsev.auto_parts_store.controllers;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.nsu.usoltsev.auto_parts_store.service.CrudService;
@@ -28,9 +30,8 @@ public abstract class CrudController<D> {
     }
 
     @PostMapping
-    public ResponseEntity<Object> add(@RequestBody D dto) {
-        crudService.add(dto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Object> add(@Valid @RequestBody D dto) {
+        return new ResponseEntity<>(crudService.add(dto), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")

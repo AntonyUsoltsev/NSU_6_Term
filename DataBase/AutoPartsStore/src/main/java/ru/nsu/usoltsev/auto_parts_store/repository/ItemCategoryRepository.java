@@ -23,4 +23,7 @@ public interface ItemCategoryRepository extends JpaRepository<ItemCategory, Long
     @Transactional
     @Query("UPDATE ItemCategory ic SET ic.categoryName = :newTypeName WHERE ic.categoryId = :id")
     void updateTypeNameById(@Param("id") Long id, @Param("newTypeName") String newTypeName);
+
+    ItemCategory findByCategoryName(String categoryName);
+
 }

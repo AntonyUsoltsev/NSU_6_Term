@@ -3,8 +3,6 @@ package ru.nsu.usoltsev.auto_parts_store.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,6 +15,7 @@ public class Supplier {
 
     @Id
     @Column(name = "supplier_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long supplierId;
 
     @Column(name = "name", nullable = false)

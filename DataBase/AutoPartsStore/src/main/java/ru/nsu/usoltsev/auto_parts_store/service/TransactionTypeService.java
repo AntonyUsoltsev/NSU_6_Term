@@ -3,6 +3,7 @@ package ru.nsu.usoltsev.auto_parts_store.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.TransactionTypeDto;
+import ru.nsu.usoltsev.auto_parts_store.model.mapper.SupplierTypeMapper;
 import ru.nsu.usoltsev.auto_parts_store.model.mapper.TransactionTypeMapper;
 import ru.nsu.usoltsev.auto_parts_store.repository.TransactionTypeRepository;
 
@@ -26,9 +27,9 @@ public class TransactionTypeService implements CrudService<TransactionTypeDto> {
     }
 
     @Override
-    public void add(TransactionTypeDto dto) {
+    public TransactionTypeDto add(TransactionTypeDto dto) {
         transactionTypeRepository.addTransactionType(dto.getTypeName());
-
+        return TransactionTypeMapper.INSTANCE.toDto(transactionTypeRepository.findByTypeName(dto.getTypeName()));
     }
 
     @Override

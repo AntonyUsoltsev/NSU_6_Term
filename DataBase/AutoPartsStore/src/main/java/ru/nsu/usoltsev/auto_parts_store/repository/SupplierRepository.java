@@ -11,14 +11,17 @@ import java.util.List;
 
 public interface SupplierRepository extends JpaRepository<Supplier, Long> {
 
-    //TODO : supplier type id из фронта
-    @Query("SELECT new ru.nsu.usoltsev.auto_parts_store.model.dto.SupplierDto(s.name, s.documents, 'someType' , s.garanty) " +
+
+    @Query("SELECT new ru.nsu.usoltsev.auto_parts_store.model.dto.SupplierDto(s.supplierId, s.name, s.documents, st.typeName , s.garanty) " +
+            "FROM Supplier s " +
+            "LEFT JOIN SupplierType st on s.typeId = st.typeId ")
+    List<SupplierDto> findAllSuplliers();
+
+    @Query("SELECT new ru.nsu.usoltsev.auto_parts_store.model.dto.SupplierDto(s.supplierId, s.name, s.documents, 'someType' , s.garanty) " +
             "FROM Supplier s " +
             "WHERE s.typeId = :type")
     List<SupplierDto> findSuppliersByType(@Param("type") Long type);
 
-
-    //TODO: remake object[]
     @Query("SELECT DISTINCT s.name, s.documents, st.typeName, s.garanty " +
             "FROM Supplier s " +
             "JOIN SupplierType st on s.typeId = st.typeId " +
@@ -35,7 +38,7 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     Integer findSuppliersCountByType(@Param("type") Long type);
 
 
-    @Query("SELECT new ru.nsu.usoltsev.auto_parts_store.model.dto.SupplierDto(s.name, s.documents, st.typeName, s.garanty)  " +
+    @Query("SELECT new ru.nsu.usoltsev.auto_parts_store.model.dto.SupplierDto(s.supplierId, s.name, s.documents, st.typeName, s.garanty)  " +
             "FROM Supplier s " +
             "JOIN SupplierType st on s.typeId = st.typeId " +
             "JOIN Delivery d ON s.supplierId = d.supplierId " +
@@ -44,8 +47,8 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
             "WHERE i.name = :item AND " +
             "dl.amount >= :amount AND " +
             ":fromDate <= d.deliveryDate AND d.deliveryDate <= :toDate ")
-    List<SupplierDto> findSuppliersByDelivery(@Param("fromDate")Timestamp fromDate,
-                                           @Param("toDate")Timestamp toDate,
-                                           @Param("amount")Integer amount,
-                                           @Param("item")String item);
+    List<SupplierDto> findSuppliersByDelivery(@Param("fromDate") Timestamp fromDate,
+                                              @Param("toDate") Timestamp toDate,
+                                              @Param("amount") Integer amount,
+                                              @Param("item") String item);
 }

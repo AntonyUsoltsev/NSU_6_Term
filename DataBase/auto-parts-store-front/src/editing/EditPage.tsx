@@ -3,6 +3,12 @@ import "../information/informationPage.css";
 import AverageSellQuery from "../information/querries/AverageSellQuery";
 import DefectItemsQuery from "../information/querries/DefectItemsQuery";
 import SupplierTypeEdit from "./editPages/SupplierTypeEdit";
+import ItemCategoryEdit from "./editPages/ItemCategoryEdit";
+import TransactionTypeEdit from "./editPages/TransactionTypeEdit";
+import SupplierEdit from "./editPages/SupplierEdit";
+import CustomerEdit from "./editPages/CustomerEdit";
+import CashierEdit from "./editPages/CashierEdit";
+import ItemEdit from "./editPages/ItemEdit";
 
 const AccordionItem = ({title, content, activeIndexes, index, handleAccordionClick, params}: any) => (
     <>
@@ -29,7 +35,7 @@ const EditPage: React.FC = () => {
         },
         {
             title: "Редактирование поставщиков",
-            content: <div></div>,
+            content: <SupplierEdit/>,
             index: 2,
         },
         {
@@ -39,27 +45,27 @@ const EditPage: React.FC = () => {
         },
         {
             title: "Редактирование типов деталей",
-            content: <div></div>,
+            content: <ItemCategoryEdit/>,
             index: 4,
         },
         {
             title: "Редактирование деталей",
-            content: <div></div>,
+            content: <ItemEdit/>,
             index: 5,
         },
         {
             title: "Редактирование покупателей",
-            content: <div></div>,
+            content: <CustomerEdit/>,
             index: 6,
         },
         {
             title: "Редактирование кассиров",
-            content: <div></div>,
+            content: <CashierEdit/>,
             index: 7,
         },
         {
             title: "Редактирование типов транзакций",
-            content: <div></div>,
+            content: <TransactionTypeEdit/>,
             index: 8,
         },
         {
@@ -69,7 +75,7 @@ const EditPage: React.FC = () => {
         },
         {
             title: "Редактирование заказов",
-            content: <DefectItemsQuery/>,
+            content: <div></div>,
             index: 10,
         }
     ];

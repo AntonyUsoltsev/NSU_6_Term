@@ -26,12 +26,13 @@ public class SupplierTypeService implements CrudService<SupplierTypeDto> {
     }
 
     @Override
-    public void add(SupplierTypeDto supplierTypeDto) {
-        supplierTypeRepository.addSupplierType(supplierTypeDto.getTypeName());
+    public SupplierTypeDto add(SupplierTypeDto dto) {
+        supplierTypeRepository.addSupplierType(dto.getTypeName());
+        return SupplierTypeMapper.INSTANCE.toDto(supplierTypeRepository.findByTypeName(dto.getTypeName()));
     }
 
     @Override
-    public void update(Long id, SupplierTypeDto supplierTypeDto) {
-        supplierTypeRepository.updateTypeNameById(id, supplierTypeDto.getTypeName());
+    public void update(Long id, SupplierTypeDto dto) {
+        supplierTypeRepository.updateTypeNameById(id, dto.getTypeName());
     }
 }
