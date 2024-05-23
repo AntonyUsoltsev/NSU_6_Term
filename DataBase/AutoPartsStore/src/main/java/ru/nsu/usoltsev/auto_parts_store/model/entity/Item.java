@@ -15,6 +15,7 @@ public class Item {
 
     @Id
     @Column(name = "item_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long itemId;
 
     @Column(name = "name", nullable = false)

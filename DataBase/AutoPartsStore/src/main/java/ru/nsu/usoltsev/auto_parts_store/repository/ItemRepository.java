@@ -3,6 +3,7 @@ package ru.nsu.usoltsev.auto_parts_store.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import ru.nsu.usoltsev.auto_parts_store.model.dto.ItemDto;
 import ru.nsu.usoltsev.auto_parts_store.model.entity.Item;
 
 import java.sql.Timestamp;
@@ -47,13 +48,15 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "JOIN Delivery d ON dl.deliveryId = d.deliveryId " +
             "JOIN Supplier s ON d.supplierId = s.supplierId " +
             "WHERE i.defectAmount > 0 AND " +
-            ":fromDate <= d.deliveryDate AND d.deliveryDate <= :toDate ")
+            ":fromDate <= d.deliveryDate AND d.deliveryDate <= :toDate " +
+            "AND i.cellNumber > 0")
     List<Object[]> findDefectItems(@Param("fromDate") Timestamp fromDate,
                                    @Param("toDate") Timestamp toDate);
 
     @Query("SELECT i.name, ic.categoryName " +
             "FROM Item i " +
-            "LEFT JOIN ItemCategory ic on i.categoryId = ic.categoryId")
+            "LEFT JOIN ItemCategory ic on i.categoryId = ic.categoryId " +
+            "WHERE i.cellNumber > 0")
     List<Object[]> getItemsCatalog();
 
     @Query("SELECT i.amount, i.price, s.name " +
@@ -68,4 +71,9 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query("SELECT count (distinct i.cellNumber) " +
             "FROM Item i " )
     Integer findStoreCapacity();
+
+    @Query("SELECT new ru.nsu.usoltsev.auto_parts_store.model.dto.ItemDto(i.itemId,i.name ,ic.categoryName, i.amount, i.defectAmount, i.price, i.cellNumber) " +
+            "FROM Item i " +
+            "LEFT JOIN ItemCategory ic on i.categoryId = ic.categoryId ")
+    List<ItemDto> findAllItems();
 }

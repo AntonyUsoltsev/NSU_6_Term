@@ -1,7 +1,5 @@
 package ru.nsu.usoltsev.auto_parts_store.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,21 +14,24 @@ import java.util.List;
 @RestController
 @RequestMapping("api/items")
 @CrossOrigin
-@AllArgsConstructor
 @Slf4j
-public class ItemsController {
-    private ItemService itemsRepository;
-    private ObjectMapper objectMapper;
+public class ItemsController extends CrudController<ItemDto> {
+    private final ItemService itemsRepository;
+
+    public ItemsController(ItemService itemsRepository) {
+        super(itemsRepository);
+        this.itemsRepository = itemsRepository;
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<ItemDto> getItem(@PathVariable String id) {
         return ResponseEntity.ok(itemsRepository.getItemById(Long.valueOf(id)));
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<ItemDto>> getItems() {
-        return ResponseEntity.ok(itemsRepository.getItems());
-    }
+//    @GetMapping("/all")
+//    public ResponseEntity<List<ItemDto>> getItems() {
+//        return ResponseEntity.ok(itemsRepository.getItems());
+//    }
 
     @GetMapping("/top")
     public ResponseEntity<List<TopTenItemsDto>> getTopTen() {
@@ -73,10 +74,10 @@ public class ItemsController {
     }
 
 
-    @PostMapping()
-    public ResponseEntity<ItemDto> createItem(@RequestBody ItemDto itemDto) {
-        return new ResponseEntity<>(itemsRepository.saveItem(itemDto), HttpStatus.CREATED);
-    }
+//    @PostMapping()
+//    public ResponseEntity<ItemDto> createItem(@RequestBody ItemDto itemDto) {
+//        return new ResponseEntity<>(itemsRepository.saveItem(itemDto), HttpStatus.CREATED);
+//    }
 
 //
 //    @GetMapping("/{id}")

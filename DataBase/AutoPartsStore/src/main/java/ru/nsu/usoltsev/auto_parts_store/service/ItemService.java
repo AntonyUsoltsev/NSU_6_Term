@@ -1,41 +1,34 @@
 package ru.nsu.usoltsev.auto_parts_store.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.nsu.usoltsev.auto_parts_store.exception.ResourceNotFoundException;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.ItemDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.*;
 import ru.nsu.usoltsev.auto_parts_store.model.entity.Item;
+import ru.nsu.usoltsev.auto_parts_store.model.entity.ItemCategory;
 import ru.nsu.usoltsev.auto_parts_store.model.mapper.ItemMapper;
+import ru.nsu.usoltsev.auto_parts_store.repository.ItemCategoryRepository;
 import ru.nsu.usoltsev.auto_parts_store.repository.ItemRepository;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class ItemService {
+@Transactional
+public class ItemService implements CrudService<ItemDto> {
     @Autowired
     private ItemRepository itemRepository;
-
-    public ItemDto saveItem(ItemDto itemDto) {
-        Item customer = ItemMapper.INSTANCE.fromDto(itemDto);
-        Item savedItem = itemRepository.saveAndFlush(customer);
-        return ItemMapper.INSTANCE.toDto(savedItem);
-    }
+    @Autowired
+    private ItemCategoryRepository itemCategoryRepository;
 
     public ItemDto getItemById(Long id) {
         return ItemMapper.INSTANCE.toDto(itemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Item is not found by id: " + id)));
-    }
-
-    public List<ItemDto> getItems() {
-        return itemRepository.findAll()
-                .stream()
-                .map(ItemMapper.INSTANCE::toDto)
-                .collect(Collectors.toList());
     }
 
     public List<ItemInfoDto> getItemsInfo() {
@@ -117,5 +110,42 @@ public class ItemService {
 
     public Integer getStoreCapacity() {
         return itemRepository.findStoreCapacity();
+    }
+
+    @Override
+    public List<ItemDto> getAll() {
+        return itemRepository.findAllItems();
+    }
+
+    @Override
+    public void delete(Long id) {
+
+    }
+
+    @Override
+    public ItemDto add(ItemDto dto) {
+        Item item = ItemMapper.INSTANCE.fromDto(dto);
+        ItemCategory itemCategory = itemCategoryRepository.findByCategoryName(dto.getCategoryName());
+        item.setCategoryId(itemCategory.getCategoryId());
+        Item savedItem = itemRepository.saveAndFlush(item);
+        return ItemMapper.INSTANCE.toDto(savedItem);
+    }
+
+    @Override
+    public void update(Long id, ItemDto dto) {
+        Optional<Item> optionalItem = itemRepository.findById(id);
+        ItemCategory itemCategory = itemCategoryRepository.findByCategoryName(dto.getCategoryName());
+        if (optionalItem.isPresent()) {
+            Item item = optionalItem.get();
+            item.setName(dto.getName());
+            item.setCategoryId(itemCategory.getCategoryId());
+            item.setAmount(dto.getAmount());
+            item.setDefectAmount(dto.getDefectAmount());
+            item.setPrice(dto.getPrice());
+            item.setCellNumber(dto.getCellNumber());
+            itemRepository.saveAndFlush(item);
+        } else {
+            throw new IllegalArgumentException("Supplier with id=" + id + " not found");
+        }
     }
 }

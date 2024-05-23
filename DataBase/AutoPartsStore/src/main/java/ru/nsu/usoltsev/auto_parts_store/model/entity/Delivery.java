@@ -18,6 +18,7 @@ public class Delivery {
 
     @Id
     @Column(name = "delivery_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long deliveryId;
 
     @Column(name = "supplier_id", nullable = false)

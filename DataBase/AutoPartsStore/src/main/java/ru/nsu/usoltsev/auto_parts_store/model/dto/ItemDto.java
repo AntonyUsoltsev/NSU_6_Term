@@ -7,9 +7,11 @@ import lombok.Data;
 @AllArgsConstructor
 public class ItemDto {
 
+    private Long itemId;
+
     private String name;
 
-    private Long categoryId;
+    private String categoryName;
 
     private Integer amount;
 

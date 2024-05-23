@@ -1,30 +1,25 @@
-package ru.nsu.usoltsev.auto_parts_store.model.dto;
+package ru.nsu.usoltsev.auto_parts_store.model.dto.crudDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import ru.nsu.usoltsev.auto_parts_store.model.entity.Supplier;
+import ru.nsu.usoltsev.auto_parts_store.model.dto.DeliveryDto;
 
 import java.sql.Timestamp;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class DeliveryDto {
-
+public class DeliveryUpdateDto {
     @Data
     @AllArgsConstructor
     public static class ItemDeliveryDto {
-        private ItemDto item;
+        private Long itemId;
         private Long purchasePrice;
     }
-
-    private Long deliveryId;
 
     private Long supplierId;
 
     private Timestamp deliveryDate;
 
-    private SupplierDto supplier;
-
-    private List<ItemDeliveryDto> itemsDelivery;
+    private List<DeliveryDto.ItemDeliveryDto> itemsDelivery;
 }
