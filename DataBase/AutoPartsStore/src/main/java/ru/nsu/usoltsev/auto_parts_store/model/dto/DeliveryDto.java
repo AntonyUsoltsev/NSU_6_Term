@@ -16,6 +16,7 @@ public class DeliveryDto {
     public static class ItemDeliveryDto {
         private ItemDto item;
         private Long purchasePrice;
+        private Long amount;
     }
 
     private Long deliveryId;

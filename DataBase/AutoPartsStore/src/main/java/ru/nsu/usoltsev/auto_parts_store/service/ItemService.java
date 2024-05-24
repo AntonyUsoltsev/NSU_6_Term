@@ -11,6 +11,7 @@ import ru.nsu.usoltsev.auto_parts_store.model.entity.ItemCategory;
 import ru.nsu.usoltsev.auto_parts_store.model.mapper.ItemMapper;
 import ru.nsu.usoltsev.auto_parts_store.repository.ItemCategoryRepository;
 import ru.nsu.usoltsev.auto_parts_store.repository.ItemRepository;
+import ru.nsu.usoltsev.auto_parts_store.repository.OrdersRepository;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ public class ItemService implements CrudService<ItemDto> {
     private ItemRepository itemRepository;
     @Autowired
     private ItemCategoryRepository itemCategoryRepository;
+    @Autowired
+    private OrdersService ordersService;
 
     public ItemDto getItemById(Long id) {
         return ItemMapper.INSTANCE.toDto(itemRepository.findById(id)
@@ -147,5 +150,6 @@ public class ItemService implements CrudService<ItemDto> {
         } else {
             throw new IllegalArgumentException("Supplier with id=" + id + " not found");
         }
+        ordersService.updateFullPrice();
     }
 }

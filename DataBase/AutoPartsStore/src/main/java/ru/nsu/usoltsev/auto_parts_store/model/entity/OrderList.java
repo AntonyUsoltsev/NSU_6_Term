@@ -1,10 +1,15 @@
 package ru.nsu.usoltsev.auto_parts_store.model.entity;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.io.Serializable;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "order_list")
 @IdClass(OrderList.OrderListKey.class)
@@ -17,10 +22,14 @@ public class OrderList {
     }
 
     @Id
+    @Column(name = "item_id")
     private Long itemId;
+
     @Id
+    @Column(name = "order_id")
     private Long orderId;
-    @Column
+
+    @Column(name = "amount")
     private Long amount;
 
 }

@@ -18,6 +18,7 @@ import ru.nsu.usoltsev.auto_parts_store.repository.SupplierRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -46,7 +47,8 @@ public class DeliveryService implements CrudService<DeliveryDto> {
             for (DeliveryList deliveryList : deliveryLists) {
                 items.add(new DeliveryDto.ItemDeliveryDto(
                         ItemMapper.INSTANCE.toDto(itemRepository.findById(deliveryList.getItemId()).orElseThrow()),
-                        deliveryList.getPurchasePrice()));
+                        deliveryList.getPurchasePrice(),
+                        deliveryList.getAmount()));
             }
             DeliveryDto deliveryDto = DeliveryMapper.INSTANCE.toDto(delivery);
             deliveryDto.setSupplier(SupplierMapper.INSTANCE.toDto(supplier));
@@ -94,7 +96,13 @@ public class DeliveryService implements CrudService<DeliveryDto> {
             DeliveryList deliveryList = new DeliveryList(
                     id,
                     itemDeliveryDto.getItem().getItemId(),
-                    Long.valueOf(item.getAmount()),
+                    existingDeliveryLists.stream()
+                            .filter((deliveryList1 ->
+                            Objects.equals(deliveryList1.getDeliveryId(), id)
+                                    && Objects.equals(deliveryList1.getItemId(), itemDeliveryDto.getItem().getItemId())))
+                            .findFirst()
+                            .orElseThrow()
+                            .getAmount(),
                     itemDeliveryDto.getPurchasePrice()
             );
             deliveryListRepository.saveAndFlush(deliveryList);
