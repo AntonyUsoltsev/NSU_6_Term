@@ -10,6 +10,7 @@ import CustomerEdit from "./editPages/CustomerEdit";
 import CashierEdit from "./editPages/CashierEdit";
 import ItemEdit from "./editPages/ItemEdit";
 import DeliveryEdit from "./editPages/DeliveryEdit";
+import OrdersEdit from "./editPages/OrdersEdit";
 
 const AccordionItem = ({title, content, activeIndexes, index, handleAccordionClick, params}: any) => (
     <>
@@ -76,7 +77,7 @@ const EditPage: React.FC = () => {
         },
         {
             title: "Редактирование заказов",
-            content: <div></div>,
+            content: <OrdersEdit/>,
             index: 10,
         }
     ];

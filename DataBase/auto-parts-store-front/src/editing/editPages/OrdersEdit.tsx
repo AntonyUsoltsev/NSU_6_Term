@@ -4,73 +4,79 @@ import moment from "moment";
 
 import PostService from "../../postService/PostService";
 
-const DeliveryEdit: React.FC = () => {
-    const [deliveriesData, setDeliveriesData] = useState([]);
-    const [suppliersData, setSuppliersData] = useState([]);
+const OrdersEdit: React.FC = () => {
+    const [ordersData, setOrdersData] = useState([]);
+    const [customersData, setCustomersData] = useState([]);
     const [itemsData, setItemsData] = useState([]);
+    const [itemQuantities, setItemQuantities] = useState(new Map());
     const [editMode, setEditMode] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [form] = Form.useForm();
-    const [currentDelivery, setCurrentDelivery] = useState<any>();
+    const [currentOrder, setCurrentOrder] = useState<any>();
 
     useEffect(() => {
-        fetchDeliveries();
-        fetchSuppliers();
+        fetchOrders();
+        fetchCustomers();
         fetchItems();
     }, []);
 
-    const fetchDeliveries = () => {
-        PostService.getRequest(`delivery/all`).then((response: any) => {
-            setDeliveriesData(response.data);
+    const fetchOrders = () => {
+        PostService.getRequest(`orders/all`).then((response: any) => {
+            setOrdersData(response.data);
         });
     };
 
-    const fetchSuppliers = () => {
-        PostService.getRequest(`suppliers/all`).then((response: any) => {
-            setSuppliersData(response.data);
+    const fetchCustomers = () => {
+        PostService.getRequest(`customers/all`).then((response: any) => {
+            setCustomersData(response.data);
         });
     };
 
     const fetchItems = () => {
         PostService.getRequest(`items/all`).then((response: any) => {
-            setItemsData(response.data);
+            const items = response.data;
+            setItemsData(items);
+            const quantities = new Map();
+            items.forEach((item: any) => {
+                quantities.set(item.itemId, item.amount);  // Assuming each item has a quantity field
+            });
+            setItemQuantities(quantities);
         });
     };
 
     const handleSave = async (values: any) => {
         try {
             const body = {
-                supplierId: values.supplierId,
-                deliveryDate: values.deliveryDate.format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
-                itemsDelivery: values.itemsDelivery.map((item: any) => ({
+                customerId: values.customerId,
+                orderDate: values.orderDate.format('YYYY-MM-DDTHH:mm:ss.SSSZ'),
+                itemsOrders: values.itemsOrders.map((item: any) => ({
                     item: {
                         itemId: item.itemId.key ? item.itemId.key : item.itemId,
                     },
-                    purchasePrice: item.purchasePrice,
+                    amount: item.amount,
                 })),
             };
 
-            console.log(body)
-            if (editMode && currentDelivery) {
-                await PostService.updateRequest(`delivery/${currentDelivery.deliveryId}`, body);
+            if (editMode && currentOrder) {
+                await PostService.updateRequest(`orders/${currentOrder.orderId}`, body);
             } else {
-                await PostService.addRequest(`delivery`, body);
+                await PostService.addRequest(`orders`, body);
             }
 
-            fetchDeliveries();
+            fetchOrders();
             resetForm();
         } catch (error) {
-            message.error("Failed to save the delivery.");
+            message.error("Failed to save the order.");
         }
     };
 
-    const handleDelete = async (deliveryId: number) => {
+    const handleDelete = async (orderId: number) => {
         try {
-            await PostService.deleteRequest(`delivery/${deliveryId}`);
-            message.success("Deleted delivery.");
-            fetchDeliveries();
+            await PostService.deleteRequest(`orders/${orderId}`);
+            message.success("Deleted order.");
+            fetchOrders();
         } catch (error) {
-            message.error("Failed to delete the delivery.");
+            message.error("Failed to delete the order.");
         }
     };
 
@@ -78,7 +84,7 @@ const DeliveryEdit: React.FC = () => {
         setEditMode(false);
         setIsModalVisible(false);
         form.resetFields();
-        setCurrentDelivery(null);
+        setCurrentOrder(null);
     };
 
     const handleAdd = () => {
@@ -89,53 +95,60 @@ const DeliveryEdit: React.FC = () => {
     const handleEdit = (record: any) => {
         setEditMode(true);
         setIsModalVisible(true);
-        setCurrentDelivery(record);
+        setCurrentOrder(record);
         form.setFieldsValue({
-            supplierId: record.supplierId,
-            deliveryDate: moment(record.deliveryDate),
-            itemsDelivery: record.itemsDelivery.map((item: any) => ({
+            customerId: record.customerId,
+            orderDate: moment(record.orderDate),
+            itemsOrders: record.itemsOrders.map((order: any) => ({
                 itemId: {
-                    key: item.item.itemId,
-                    label: `${item.item.name} (Ячейка: ${item.item.cellNumber})`,
+                    key: order.item.itemId,
+                    label: `${order.item.name} (Ячейка: ${order.item.cellNumber})`,
                 },
-                purchasePrice: item.purchasePrice,
+                amount: order.amount
             })),
         });
     };
 
     const getAvailableItems = () => {
-        const deliveredItemIds = new Set(
-            deliveriesData.flatMap((delivery: any) => delivery.itemsDelivery.map((item: any) => item.item.itemId))
+        const orderedItemIds = new Set(
+            ordersData.flatMap((order: any) => order.itemsOrders.map((item: any) => item.item.itemId))
         );
 
-        return itemsData.filter((item: any) => !deliveredItemIds.has(item.itemId));
+        return itemsData.filter((item: any) => !orderedItemIds.has(item.itemId));
     };
 
     const columns = [
         {
-            title: "Поставщик",
-            dataIndex: ["supplier", "name"],
-            key: "supplier",
+            title: "Покупатель",
+            dataIndex: ["customer", "name"],
+            key: "customer",
+            render: (text: string, record: any) => `${record.customer.name} ${record.customer.secondName}`,
         },
         {
-            title: "Дата доставки",
-            dataIndex: "deliveryDate",
-            key: "deliveryDate",
+            title: "Дата заказа",
+            dataIndex: "orderDate",
+            key: "orderDate",
             render: (text: string) => moment(text).format('YYYY-MM-DD'),
         },
         {
-            title: "Детали доставки",
-            dataIndex: "itemsDelivery",
-            key: "itemsDelivery",
-            render: (itemsDelivery: any[]) => (
+            title: "Детали заказа",
+            dataIndex: "itemsOrders",
+            key: "itemsOrders",
+            render: (itemsOrders: any[]) => (
                 <div>
-                    {itemsDelivery.map(item => (
+                    {itemsOrders.map(item => (
                         <div key={item.item.itemId}>
-                            {item.item.name} (Ячейка: {item.item.cellNumber}, Цена покупки: {item.purchasePrice} р., Доставлено : {item.amount} шт.)
+                            {item.item.name} (Ячейка: {item.item.cellNumber}, Цена: {item.item.price} р.,
+                            Количество: {item.amount})
                         </div>
                     ))}
                 </div>
             ),
+        },
+        {
+            title: "Полная стоимость",
+            dataIndex: "fullPrice",
+            key: "fullPrice",
         },
         {
             title: "Действия",
@@ -144,8 +157,8 @@ const DeliveryEdit: React.FC = () => {
                 <span>
                     <a onClick={() => handleEdit(record)} style={{marginRight: "10px"}}>Редактировать</a>
                     <Popconfirm
-                        title="Вы уверены, что хотите удалить эту доставку?"
-                        onConfirm={() => handleDelete(record.deliveryId)}
+                        title="Вы уверены, что хотите удалить этот заказ?"
+                        onConfirm={() => handleDelete(record.orderId)}
                         okText="Да"
                         cancelText="Нет"
                     >
@@ -158,17 +171,17 @@ const DeliveryEdit: React.FC = () => {
 
     return (
         <div>
-            <h2 style={{marginBottom: "15px"}}>Доставки</h2>
+            <h2 style={{marginBottom: "15px"}}>Заказы</h2>
             <Button type="primary" onClick={handleAdd} style={{marginBottom: "15px"}}>
                 Добавить
             </Button>
             <Table
                 columns={columns}
-                dataSource={deliveriesData}
-                rowKey="deliveryId"
+                dataSource={ordersData}
+                rowKey="orderId"
             />
             <Modal
-                title={editMode ? "Редактировать доставку" : "Добавить доставку"}
+                title={editMode ? "Редактировать заказ" : "Добавить заказ"}
                 visible={isModalVisible}
                 onCancel={resetForm}
                 footer={[
@@ -182,26 +195,26 @@ const DeliveryEdit: React.FC = () => {
             >
                 <Form form={form} layout="vertical" onFinish={handleSave}>
                     <Form.Item
-                        label="Поставщик"
-                        name="supplierId"
-                        rules={[{required: true, message: "Пожалуйста, выберите поставщика"}]}
+                        label="Покупатель"
+                        name="customerId"
+                        rules={[{required: true, message: "Пожалуйста, выберите покупателя"}]}
                     >
                         <Select>
-                            {suppliersData.map((supplier: any) => (
-                                <Select.Option key={supplier.supplierId} value={supplier.supplierId}>
-                                    {supplier.name}
+                            {customersData.map((customer: any) => (
+                                <Select.Option key={customer.customerId} value={customer.customerId}>
+                                    {customer.name} {customer.secondName}
                                 </Select.Option>
                             ))}
                         </Select>
                     </Form.Item>
                     <Form.Item
-                        label="Дата доставки"
-                        name="deliveryDate"
-                        rules={[{required: true, message: "Пожалуйста, выберите дату доставки"}]}
+                        label="Дата заказа"
+                        name="orderDate"
+                        rules={[{required: true, message: "Пожалуйста, выберите дату заказа"}]}
                     >
                         <DatePicker showTime format="YYYY-MM-DDTHH:mm:ss.SSSZ"/>
                     </Form.Item>
-                    <Form.List name="itemsDelivery">
+                    <Form.List name="itemsOrders">
                         {(fields, {add, remove}) => (
                             <>
                                 {fields.map((field, index) => (
@@ -215,22 +228,36 @@ const DeliveryEdit: React.FC = () => {
                                             style={{flex: 1, marginRight: '8px'}}
                                         >
                                             <Select>
-                                                {getAvailableItems().map((item: any) => (
+                                                {itemsData.map((item: any) => (
                                                     <Select.Option key={item.itemId} value={item.itemId}>
                                                         {item.name} (Ячейка: {item.cellNumber})
                                                     </Select.Option>
                                                 ))}
                                             </Select>
                                         </Form.Item>
+
                                         <Form.Item
                                             {...field}
-                                            label="Цена покупки"
-                                            name={[field.name, 'purchasePrice']}
-                                            rules={[{required: true, message: 'Пожалуйста, введите цену покупки'}]}
+                                            label="Количество"
+                                            name={[field.name, 'amount']}
+                                            rules={[
+                                                {required: true, message: 'Пожалуйста, введите количество'},
+                                                ({getFieldValue}) => ({
+                                                    validator(_, value) {
+                                                        const itemId = getFieldValue(['itemsOrders', field.name, 'itemId']);
+                                                        const availableAmount = itemQuantities.get(itemId);
+                                                        if (!value || (value > 0 && value <= availableAmount)) {
+                                                            return Promise.resolve();
+                                                        }
+                                                        return Promise.reject(new Error(`Максимальное количество: ${availableAmount}`));
+                                                    }
+                                                })
+                                            ]}
                                             style={{flex: 1, marginRight: '8px'}}
                                         >
-                                            <Input type="number"/>
+                                            <Input type="number" min={1}/>
                                         </Form.Item>
+
                                         <Button type="link" onClick={() => remove(field.name)}>Удалить</Button>
                                     </div>
                                 ))}
@@ -248,4 +275,4 @@ const DeliveryEdit: React.FC = () => {
     );
 };
 
-export default DeliveryEdit;
+export default OrdersEdit;
