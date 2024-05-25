@@ -29,6 +29,7 @@ const ItemsInfoQuery = () => {
             title: "Номер ячейки",
             dataIndex: "cellNumber",
             key: "cellNumber",
+            sorter: (a: any, b: any) => a.cellNumber - b.cellNumber,
         }
     ];
 

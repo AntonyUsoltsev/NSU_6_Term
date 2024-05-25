@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Row, Col, Spin, Table, Input, Button, Select} from 'antd';
+import {Button, Select, Spin, Table} from 'antd';
 import './Catalog.css';
 import PostService from '../postService/PostService';
 
@@ -10,17 +10,15 @@ const CatalogPage: React.FC = () => {
     const [catalog, setCatalog] = useState([]);
 
     useEffect(() => {
-        // Загрузка списка университетов при монтировании компонента
         PostService.getCatalog().then((response: any) => {
             setCatalog(response.data);
             setLoading(false);
         });
     }, []);
 
-    // Получение списка уникальных категорий
     const uniqueCategories = Array.from(new Set(catalog.map((item: any) => item.categoryName)));
+    const uniqueSuppliers = Array.from(new Set(catalog.flatMap((item: any) => item.supplierItemInfos.map((supplierItem: any) => supplierItem.supplierName))));
 
-    // Columns for the table
     const columns = [
         {
             title: 'Название детали',
@@ -31,7 +29,6 @@ const CatalogPage: React.FC = () => {
             title: 'Категория',
             dataIndex: 'categoryName',
             key: 'categoryName',
-            // Добавление фильтра для категории
             filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}: any) => (
                 <div style={{padding: 8}}>
                     <Select
@@ -70,22 +67,26 @@ const CatalogPage: React.FC = () => {
             title: 'Цена',
             dataIndex: 'price',
             key: 'price',
-            sorter: (a: any, b: any) => a.price - b.price, // Добавление возможности сортировки по цене
+            sorter: (a: any, b: any) => a.price - b.price,
         },
         {
             title: 'Имя поставщика',
             dataIndex: 'supplierName',
             key: 'supplierName',
-            // Добавление фильтра для поставщика
             filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}: any) => (
                 <div style={{padding: 8}}>
-                    <Input
-                        placeholder="Поиск"
+                    <Select
+                        placeholder="Выберите поставщика"
                         value={selectedKeys[0]}
-                        onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                        onPressEnter={() => confirm()}
-                        style={{width: '100%', marginBottom: 8, display: 'block'}}
-                    />
+                        onChange={(value) => setSelectedKeys(value ? [value] : [])}
+                        style={{width: 190, marginBottom: 8, display: 'block'}}
+                    >
+                        {uniqueSuppliers.map((supplier, index) => (
+                            <Option key={index} value={supplier}>
+                                {supplier}
+                            </Option>
+                        ))}
+                    </Select>
                     <Button
                         type="primary"
                         onClick={() => confirm()}
@@ -130,7 +131,6 @@ const CatalogPage: React.FC = () => {
                 <Table
                     columns={columns}
                     dataSource={data}
-                    // Добавление пагинации, если это нужно
                     pagination={{pageSize: 20}}
                 />
             )}

@@ -5,11 +5,24 @@ import org.springframework.stereotype.Service;
 import ru.nsu.usoltsev.auto_parts_store.model.Params;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.CashierDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.CustomerDto;
+import ru.nsu.usoltsev.auto_parts_store.model.dto.OrdersDto;
+import ru.nsu.usoltsev.auto_parts_store.model.dto.TransactionDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.AverageSellDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.CashReportDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.SellingSpeedDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.TransactionInfoDto;
+import ru.nsu.usoltsev.auto_parts_store.model.entity.Cashier;
+import ru.nsu.usoltsev.auto_parts_store.model.entity.Orders;
+import ru.nsu.usoltsev.auto_parts_store.model.entity.Transaction;
+import ru.nsu.usoltsev.auto_parts_store.model.entity.TransactionType;
+import ru.nsu.usoltsev.auto_parts_store.model.mapper.CashierMapper;
+import ru.nsu.usoltsev.auto_parts_store.model.mapper.OrdersMapper;
+import ru.nsu.usoltsev.auto_parts_store.model.mapper.TransactionMapper;
+import ru.nsu.usoltsev.auto_parts_store.model.mapper.TransactionTypeMapper;
+import ru.nsu.usoltsev.auto_parts_store.repository.CashierRepository;
+import ru.nsu.usoltsev.auto_parts_store.repository.OrdersRepository;
 import ru.nsu.usoltsev.auto_parts_store.repository.TransactionRepository;
+import ru.nsu.usoltsev.auto_parts_store.repository.TransactionTypeRepository;
 
 import java.sql.Timestamp;
 import java.time.Duration;
@@ -21,10 +34,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class TransactionService {
+public class TransactionService implements CrudService<TransactionDto> {
 
     @Autowired
     TransactionRepository transactionRepository;
+    @Autowired
+    OrdersRepository ordersRepository;
+    @Autowired
+    OrdersService ordersService;
+    @Autowired
+    CashierRepository cashierRepository;
+    @Autowired
+    TransactionTypeRepository transactionTypeRepository;
 
     public List<TransactionInfoDto> getTransactionInfoByDay(String date) {
         LocalDate localDate = LocalDate.parse(date);
@@ -70,8 +91,8 @@ public class TransactionService {
                     (Timestamp) row[1],
                     (String) row[2],
                     (Integer) row[3],
-                    new CashierDto((Long) row[4],(String) row[5], (String) row[6]),
-                    new CustomerDto((Long) row[7],(String) row[8], (String) row[9], (String) row[10]),
+                    new CashierDto((Long) row[4], (String) row[5], (String) row[6]),
+                    new CustomerDto((Long) row[7], (String) row[8], (String) row[9], (String) row[10]),
                     transactionOrderList)
             );
         }
@@ -95,6 +116,38 @@ public class TransactionService {
                         (Double.valueOf((Long) row[1]) / months)))
                 .toList();
 
+
+    }
+
+    @Override
+    public List<TransactionDto> getAll() {
+        List<TransactionDto> transactionDtos = new ArrayList<>();
+        List<Transaction> transactions = transactionRepository.findAll();
+        for (Transaction transaction : transactions) {
+            TransactionDto transactionDto = TransactionMapper.INSTANCE.toDto(transaction);
+            OrdersDto ordersDto = ordersService.findOrdersWithCustomer(transaction.getOrderId());
+            Cashier cashier = cashierRepository.findById(transaction.getCashierId()).orElseThrow();
+            TransactionType transactionType = transactionTypeRepository.findByTypeId(transaction.getTypeId());
+            transactionDto.setOrders(ordersDto);
+            transactionDto.setCashier(CashierMapper.INSTANCE.toDto(cashier));
+            transactionDto.setTransactionTypeDto(TransactionTypeMapper.INSTANCE.toDto(transactionType));
+            transactionDtos.add(transactionDto);
+        }
+        return transactionDtos;
+    }
+
+    @Override
+    public void delete(Long id) {
+
+    }
+
+    @Override
+    public TransactionDto add(TransactionDto dto) {
+        return null;
+    }
+
+    @Override
+    public void update(Long id, TransactionDto dto) {
 
     }
 }

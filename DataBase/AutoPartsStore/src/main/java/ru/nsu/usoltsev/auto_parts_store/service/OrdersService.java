@@ -35,12 +35,6 @@ public class OrdersService implements CrudService<OrdersDto> {
     @Autowired
     private OrderListRepository orderListRepository;
 
-    public OrdersDto saveOrder(OrdersDto ordersDto) {
-        Orders orders = OrdersMapper.INSTANCE.fromDto(ordersDto);
-        Orders savedItem = ordersRepository.saveAndFlush(orders);
-        return OrdersMapper.INSTANCE.toDto(savedItem);
-    }
-
     public OrdersDto getOrderById(Long id) {
         return OrdersMapper.INSTANCE.toDto(ordersRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order is not found by id: " + id)));
@@ -145,5 +139,13 @@ public class OrdersService implements CrudService<OrdersDto> {
             order.setFullPrice(newFullPrice);
             ordersRepository.saveAndFlush(order);
         }
+    }
+
+    public OrdersDto findOrdersWithCustomer(Long orderId) {
+        Orders order = ordersRepository.findById(orderId).orElseThrow();
+        Customer customer = customerRepository.findById(order.getCustomerId()).orElseThrow();
+        OrdersDto ordersDto = OrdersMapper.INSTANCE.toDto(order);
+        ordersDto.setCustomer(CustomerMapper.INSTANCE.toDto(customer));
+        return ordersDto;
     }
 }

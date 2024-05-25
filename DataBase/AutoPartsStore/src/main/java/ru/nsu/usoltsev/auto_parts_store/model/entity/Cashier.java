@@ -16,7 +16,6 @@ public class Cashier {
     @Id
     @Column(name = "cashier_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long cashierId;
 
     @Column(name = "name", nullable = false)

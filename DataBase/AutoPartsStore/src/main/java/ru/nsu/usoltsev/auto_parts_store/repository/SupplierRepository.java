@@ -22,7 +22,7 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
             "WHERE s.typeId = :type")
     List<SupplierDto> findSuppliersByType(@Param("type") Long type);
 
-    @Query("SELECT DISTINCT s.name, s.documents, st.typeName, s.garanty " +
+    @Query("SELECT DISTINCT s.supplierId, s.name, s.documents, st.typeName, s.garanty " +
             "FROM Supplier s " +
             "JOIN SupplierType st on s.typeId = st.typeId " +
             "JOIN Delivery d ON s.supplierId = d.supplierId " +

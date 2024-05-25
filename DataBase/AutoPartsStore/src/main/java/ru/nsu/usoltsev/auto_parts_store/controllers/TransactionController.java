@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.nsu.usoltsev.auto_parts_store.model.dto.TransactionDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.AverageSellDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.CashReportDto;
 import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.SellingSpeedDto;
@@ -12,16 +13,19 @@ import ru.nsu.usoltsev.auto_parts_store.model.dto.querriesDto.TransactionInfoDto
 import ru.nsu.usoltsev.auto_parts_store.service.TransactionService;
 
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
 @CrossOrigin
 @RequestMapping("api/transactions")
-@AllArgsConstructor
-public class TransactionController {
+public class TransactionController extends CrudController<TransactionDto> {
     @Autowired
     private TransactionService transactionService;
+
+    public TransactionController(TransactionService transactionService) {
+        super(transactionService);
+        this.transactionService = transactionService;
+    }
 
     @GetMapping("/realised")
     public ResponseEntity<List<TransactionInfoDto>> getRealisedItemsByDay(@RequestParam("date") String date) {

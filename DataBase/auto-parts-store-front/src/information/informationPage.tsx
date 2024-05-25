@@ -69,13 +69,13 @@ const InformationPage: React.FC = () => {
         {
             title: "5. Получить перечень и общее число покупателей, купивших указанный вид товара за некоторый период не менее указанного объема",
             params: <p style={{marginBottom: "20px"}}>Параметры:</p>,
-            content: <CustomerByItemQuery/>,
+            content: <CustomerByItemWithAmountQuery/>,
             index: 5,
         },
         {
             title: "6. Получить перечень и общее число покупателей, купивших указанный вид товара за некоторый период",
             params: <p style={{marginBottom: "20px"}}>Параметры:</p>,
-            content: <CustomerByItemWithAmountQuery/>,
+            content: <CustomerByItemQuery/>,
             index: 6,
         },
         {

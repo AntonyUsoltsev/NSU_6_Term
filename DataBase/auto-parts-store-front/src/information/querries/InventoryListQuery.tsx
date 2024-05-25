@@ -27,8 +27,8 @@ const InventoryListQuery = () => {
         },
         {
             title: "Категория",
-            dataIndex: "categoryId",
-            key: "categoryId",
+            dataIndex: "categoryName",
+            key: "categoryName",
         },
         {
             title: "Количество бракованных",
